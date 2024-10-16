@@ -9,7 +9,7 @@ module.exports = {
       option
         .setName("item")
         .setDescription("Choose an item to buy")
-        .setRequired(true)
+        .setRequired(false) // Make this option not required
         .addChoices(
           { name: '🇪🇸 Spanish Flag', value: 'spanishFlag' },
           { name: '🧉 Mate', value: 'mate' },
@@ -37,13 +37,13 @@ module.exports = {
       option
         .setName("amount")
         .setDescription("Amount of items to buy")
-        .setRequired(true)
+        .setRequired(false) // Make this option not required
     ),
   category: "game",
   usage: "Buy items from the store",
   async execute(interaction, client) {
     const item = interaction.options.getString("item");
-    const amount = interaction.options.getInteger("amount");
+    const amount = interaction.options.getInteger("amount") || 1; // Default amount is 1
     const prices = {
       spanishFlag: 50000,
       mate: 50000,
@@ -75,6 +75,28 @@ module.exports = {
       });
     }
 
+    // Show the list of items if no item is specified
+    if (!item) {
+      const embed = {
+        title: 'Store Items',
+        fields: Object.entries(prices).map(([key, price]) => ({
+          name: `**${key.replace(/([A-Z])/g, ' $1').toUpperCase()}:** ${price.toLocaleString()} 💰`,
+          value: `Available quantity: 100`, // Example quantity
+          inline: true,
+        })),
+        color: 0x3498db,
+      };
+      return interaction.reply({ embeds: [embed] });
+    }
+
+    // Check if the selected item is in the price list
+    if (!prices[item]) {
+      return interaction.reply({
+        content: "Invalid item selected.",
+        ephemeral: true,
+      });
+    }
+
     const totalCost = prices[item] * amount;
 
     if (player.balance < totalCost) {
@@ -101,7 +123,7 @@ module.exports = {
       embeds: [
         {
           title: "Purchase Successful!",
-          description: `You bought ${amount} ${item} for ${totalCost.toLocaleString()} 💰.`,
+          description: `You bought ${amount} ${item.replace(/([A-Z])/g, ' $1')} for ${totalCost.toLocaleString()} 💰.`,
           color: 0x00ff00,
         },
       ],
