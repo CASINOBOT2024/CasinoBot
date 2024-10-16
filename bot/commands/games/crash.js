@@ -22,18 +22,7 @@ module.exports = {
   async execute(interaction, client) {
     const betAmount = interaction.options.getInteger('bet');
 
-    if(betAmount > 30000) {
-      return interaction.reply({
-        embeds: [
-          {
-            title: "Cooldown Active",
-            description: `The max bet is **30.000 🪙**. Please enter a lower bet and try again.`,
-            color: 0xff0000,
-          },
-        ],
-        ephemeral: true,
-      });
-    }
+    
 
     // Fetch player data from the database
     const playerData = await Player.findOne({ userId: interaction.user.id });
@@ -53,6 +42,30 @@ module.exports = {
         lastRoulette: 0,
       });
       await playerData.save();
+    }
+    
+    if(player.balance <= 10000000 && betAmount > 30000) {
+      return interaction.reply({
+        embeds: [
+          {
+            title: "Cooldown Active",
+            description: `The max bet is **30.000 🪙**. Please enter a lower bet and try again.`,
+            color: 0xff0000,
+          },
+        ],
+        ephemeral: true,
+      });
+    } else if(player.balance > 10000000 && betAmount > 50000) {
+      return interaction.reply({
+        embeds: [
+          {
+            title: "Cooldown Active",
+            description: `The max bet is **50.000 🪙**. Please enter a lower bet and try again.`,
+            color: 0xff0000,
+          },
+        ],
+        ephemeral: true,
+      });
     }
 
     const currentTime = Date.now();
