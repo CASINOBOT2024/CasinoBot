@@ -48,7 +48,7 @@ client.once("ready" , async (client) => {
   client.user.setPresence({
     activities: [
       {
-        name: "robarte el dinero",
+        name: "steal your money",
         type: ActivityType.Playing,
       },
     ],
