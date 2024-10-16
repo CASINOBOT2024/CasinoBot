@@ -4,18 +4,19 @@ const Player = require('../../../mongoDB/Player');
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('inventory')
-    .setDescription('View your inventory or someone else\'s')
+    .setDescription('Check your or another user\'s inventory')
     .addUserOption(option =>
       option.setName('user')
-        .setDescription('The user whose inventory you want to view')
+        .setDescription('The user whose inventory you want to check')
+        .setRequired(false)
     ),
-  category: 'users',
-  usage: "View your inventory or someone else\'s",
+  category: 'economy',
   async execute(interaction) {
+    // Get the user mentioned or default to the command user
     const targetUser = interaction.options.getUser('user') || interaction.user;
 
-    // Fetch the player data from the database for the specified user or the interaction user
-    const player = await Player.findOne({ userId: targetUser.id });
+    // Fetch the player's inventory from the database
+    let player = await Player.findOne({ userId: targetUser.id });
 
     if (!player || !player.swag || Object.keys(player.swag).length === 0) {
       return interaction.reply({
@@ -24,21 +25,37 @@ module.exports = {
       });
     }
 
+    // Embed to show the inventory
     const inventoryEmbed = new EmbedBuilder()
       .setTitle(`${targetUser.username}'s Inventory`)
-      .setColor(0x3498db);
+      .setColor(0x3498db)
+      .setDescription('Here are the items they own:')
+      .setThumbnail(targetUser.displayAvatarURL({ dynamic: true }))
+      .setFooter({ text: `Inventory of ${targetUser.username}` });
 
-    // Add the items from swag to the embed
-    for (const [item, quantity] of Object.entries(player.swag)) {
+    // List of emoji representations for each item
+    const itemEmojis = {
+      '🇪🇸 Spanish Flag': '🇪🇸',
+      '🧉 Mate': '🧉',
+      '🥘 Paella': '🥘',
+      '🍷 Wine': '🍷',
+      '🎺 Flamenco Trumpet': '🎺',
+      '👒 Sombrero': '👒',
+      '⚽ Soccer Ball': '⚽',
+      '📱 Mobile': '📱',
+      '🎈 Balloon': '🎈'
+    };
+
+    // Iterate over the player's inventory and display the items with the corresponding emoji
+    for (const [itemName, quantity] of Object.entries(player.swag)) {
+      const emoji = itemEmojis[itemName] || ''; // Get emoji or empty string if not available
       inventoryEmbed.addFields({
-        name: item,
-        value: `Quantity: ${quantity}`,
+        name: `${emoji} ${itemName}`,
+        value: `Quantity: ${quantity.toLocaleString()}`,
         inline: true
       });
     }
 
-    inventoryEmbed.setFooter({ text: `Total balance: ${player.balance.toLocaleString()} 💰` });
-
     await interaction.reply({ embeds: [inventoryEmbed] });
-  }
+  },
 };
