@@ -22,26 +22,21 @@ module.exports = {
     }
 
     const inventoryItems = [
-      { name: 'Spanish Flag', count: player.swag.balloons, emoji: '🇪🇸' },
-      { name: 'Mate', count: player.swag.mobile, emoji: '🧉' },
-      { name: 'Paella', count: player.swag.jamon, emoji: '🥘' },
-      { name: 'Wine', count: player.swag.paella, emoji: '🍷' },
-      { name: 'Flamenco Trumpet', count: player.swag.guitarra, emoji: '🎺' },
-      { name: 'Sombrero', count: player.swag.torero, emoji: '👒' },
-      { name: 'Soccer Ball', count: player.swag.flamenco, emoji: '⚽' },
-      { name: 'Mobile', count: player.swag.siesta, emoji: '📱' },
-      { name: 'Balloon', count: player.swag.cava, emoji: '🎈' },
-      { name: 'Jamón', count: player.swag.castanuelas, emoji: '🐖' },
-      { name: 'Guitarra', count: player.swag.sagradaFamilia, emoji: '🎸' },
-      { name: 'Torero', count: player.swag.futbol, emoji: '🐂' },
-      { name: 'Flamenco', count: player.swag.vino, emoji: '💃' },
-      { name: 'Siesta', count: player.swag.sol, emoji: '💤' },
+      { name: 'Spanish Flag', count: player.swag.spanishFlag, emoji: '🇪🇸' },
+      { name: 'Mate', count: player.swag.mate, emoji: '🧉' },
+      { name: 'Paella', count: player.swag.paella, emoji: '🥘' },
+      { name: 'Wine', count: player.swag.wine, emoji: '🍷' },
+      { name: 'Sombrero', count: player.swag.sombrero, emoji: '👒' },
+      { name: 'Soccer Ball', count: player.swag.soccerBall, emoji: '⚽' },
+      { name: 'Jamón', count: player.swag.jamon, emoji: '🐖' },
+      { name: 'Guitarra', count: player.swag.guitarra, emoji: '🎸' },
+      { name: 'Torero', count: player.swag.torero, emoji: '🐂' },
+      { name: 'Flamenco', count: player.swag.flamenco, emoji: '💃' },
+      { name: 'Siesta', count: player.swag.siesta, emoji: '💤' },
       { name: 'Cava', count: player.swag.cava, emoji: '🍾' },
       { name: 'Castañuelas', count: player.swag.castanuelas, emoji: '🎶' },
       { name: 'Sagrada Familia', count: player.swag.sagradaFamilia, emoji: '🏰' },
-      { name: 'Fútbol', count: player.swag.futbol, emoji: '⚽' },
-      { name: 'Vino', count: player.swag.vino, emoji: '🍷' },
-      { name: 'Sol', count: player.swag.sol, emoji: '☀️' },
+      { name: 'Sol', count: player.swag.sagradaFamilia, emoji: '☀️' },
     ];
 
     const inventoryList = inventoryItems
