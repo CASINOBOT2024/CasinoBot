@@ -22,6 +22,7 @@ const PlayerSchema = new mongoose.Schema({
     soccerBall: { type: Number, default: 0 },
     wine: { type: Number, default: 0 },
     sol: { type: Number, default: 0 },
+    spanishFlag: { type: Number, default: 0 },
   },
   lastDaily: { type: Number, default: 0 },
   lastRoulette: { type: Number, default: 0 },
