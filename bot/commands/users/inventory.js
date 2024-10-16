@@ -1,61 +1,60 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const Player = require('../../../mongoDB/Player');
+const { SlashCommandBuilder } = require("discord.js");
+const Player = require("../../../mongoDB/Player");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('inventory')
-    .setDescription('Check your or another user\'s inventory')
-    .addUserOption(option =>
-      option.setName('user')
-        .setDescription('The user whose inventory you want to check')
-        .setRequired(false)
+    .setName("inventory")
+    .setDescription("View your inventory or another user's inventory")
+    .addUserOption((option) =>
+      option.setName("user").setDescription("The user whose inventory to view")
     ),
-  category: 'economy',
-  async execute(interaction) {
-    // Get the user mentioned or default to the command user
-    const targetUser = interaction.options.getUser('user') || interaction.user;
+  category: "game",
+  usage: "View your or another user's inventory",
+  async execute(interaction, client) {
+    const user = interaction.options.getUser("user") || interaction.user;
+    const player = await Player.findOne({ userId: user.id });
 
-    // Fetch the player's inventory from the database
-    let player = await Player.findOne({ userId: targetUser.id });
-
-    if (!player || !player.swag || Object.keys(player.swag).length === 0) {
+    if (!player) {
       return interaction.reply({
-        content: `${targetUser.username} has no items in their inventory.`,
-        ephemeral: true
+        content: "This user doesn't have an account.",
+        ephemeral: true,
       });
     }
 
-    // Embed to show the inventory
-    const inventoryEmbed = new EmbedBuilder()
-      .setTitle(`${targetUser.username}'s Inventory`)
-      .setColor(0x3498db)
-      .setDescription('Here are the items they own:')
-      .setThumbnail(targetUser.displayAvatarURL({ dynamic: true }))
-      .setFooter({ text: `Inventory of ${targetUser.username}` });
+    const inventoryItems = [
+      { name: '🇪🇸 Spanish Flag', count: player.swag.balloons, emoji: '🇪🇸' },
+      { name: '🧉 Mate', count: player.swag.mobile, emoji: '🧉' },
+      { name: '🥘 Paella', count: player.swag.jamon, emoji: '🥘' },
+      { name: '🍷 Wine', count: player.swag.paella, emoji: '🍷' },
+      { name: '🎺 Flamenco Trumpet', count: player.swag.guitarra, emoji: '🎺' },
+      { name: '👒 Sombrero', count: player.swag.torero, emoji: '👒' },
+      { name: '⚽ Soccer Ball', count: player.swag.flamenco, emoji: '⚽' },
+      { name: '📱 Mobile', count: player.swag.siesta, emoji: '📱' },
+      { name: '🎈 Balloon', count: player.swag.cava, emoji: '🎈' },
+      { name: '🐖 Jamón', count: player.swag.castanuelas, emoji: '🐖' },
+      { name: '🎸 Guitarra', count: player.swag.sagradaFamilia, emoji: '🎸' },
+      { name: '🐂 Torero', count: player.swag.futbol, emoji: '🐂' },
+      { name: '💃 Flamenco', count: player.swag.vino, emoji: '💃' },
+      { name: '💤 Siesta', count: player.swag.sol, emoji: '💤' },
+      { name: '🍾 Cava', count: player.swag.cava, emoji: '🍾' },
+      { name: '🎶 Castañuelas', count: player.swag.castanuelas, emoji: '🎶' },
+      { name: '🏰 Sagrada Familia', count: player.swag.sagradaFamilia, emoji: '🏰' },
+      { name: '⚽ Fútbol', count: player.swag.futbol, emoji: '⚽' },
+      { name: '🍷 Vino', count: player.swag.vino, emoji: '🍷' },
+      { name: '☀️ Sol', count: player.swag.sol, emoji: '☀️' },
+    ];
 
-    // List of emoji representations for each item
-    const itemEmojis = {
-      '🇪🇸 Spanish Flag': '🇪🇸',
-      '🧉 Mate': '🧉',
-      '🥘 Paella': '🥘',
-      '🍷 Wine': '🍷',
-      '🎺 Flamenco Trumpet': '🎺',
-      '👒 Sombrero': '👒',
-      '⚽ Soccer Ball': '⚽',
-      '📱 Mobile': '📱',
-      '🎈 Balloon': '🎈'
+    const inventoryList = inventoryItems
+      .filter(item => item.count > 0) // Filter out items with a count of 0
+      .map(item => `${item.emoji} **${item.name}:** ${item.count}`)
+      .join("\n");
+
+    const embed = {
+      title: `${user.username}'s Inventory`,
+      description: inventoryList || "This inventory is empty.",
+      color: 0x00ff00,
     };
 
-    // Iterate over the player's inventory and display the items with the corresponding emoji
-    for (const [itemName, quantity] of Object.entries(player.swag)) {
-      const emoji = itemEmojis[itemName] || ''; // Get emoji or empty string if not available
-      inventoryEmbed.addFields({
-        name: `${emoji} ${itemName}`,
-        value: `Quantity: ${quantity.toLocaleString()}`,
-        inline: true
-      });
-    }
-
-    await interaction.reply({ embeds: [inventoryEmbed] });
+    return interaction.reply({ embeds: [embed] });
   },
 };
