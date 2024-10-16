@@ -41,9 +41,9 @@ module.exports = {
     let topMessage = topPlayers.map((player, index) => {
       const user = client.users.cache.get(player.userId);
       return `**#${index + 1}** - ${user ? `<@${user.id}>` : 'Unknown Player'}: ${
-        category === 'balance' ? `**${player.balance.toLocaleString()}* 💰` : `Level ${player.level}`
+        category === 'balance' ? `**${player.balance.toLocaleString()}** 💰` : `Level ${player.level}`
       }`;
-    }).join('\n');
+    }).join('\n\n');
 
     // Create an embed to display the top
     const topEmbed = {
