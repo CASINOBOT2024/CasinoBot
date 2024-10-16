@@ -47,7 +47,7 @@ module.exports = {
   async execute(interaction, client) {
     
     const betAmount = interaction.options.getInteger("bet");
-    if(betAmoun > 30000) {
+    if(betAmount > 30000) {
       return interaction.reply({
         embeds: [
           {
