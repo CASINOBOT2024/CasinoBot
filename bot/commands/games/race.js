@@ -124,7 +124,7 @@ module.exports = {
             // Generate a random number of dashes between 1 and 4
             const randomDashesCount = Math.floor(Math.random() * 4) + 1; // Between 1 and 4
             const dashes = "- ".repeat(randomDashesCount).trim(); // Create dashes
-            return `🏁 ${horseNumber} ${dashes} ${horses.emoji[index + 1]}`; // Non-winning horse
+            return `🏁 ${horseNumber} ${dashes} 🦖`; // Non-winning horse
           }
         })
         .join("\n");
