@@ -80,123 +80,88 @@ module.exports = {
       });
     }
 
-    player.balance -= betAmount; // Deduct the bet amount from player's balance
-    await player.save();
+    playerData.balance -= betAmount;
+    await playerData.save();
 
-    // Create the initial embed
-    let crashMultiplier = 1.0;
-    const crashEmbed = new EmbedBuilder()
-      .setTitle("💥 Crash Game")
-      .setDescription(`Multiplier: **${crashMultiplier.toFixed(2)}x**`)
-      .setColor(0xffa500) // Orange color for the game start
-      .setFooter({ text: "Press the stop button to cash out!" });
+    let multiplier = 1.0;
+    const crashTime = Math.random() * 15000 + 5000; // Between 5 and 20 seconds
+    let crashed = false;
 
-    const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setCustomId("cashout")
-        .setEmoji("🛑") // Button with stop emoji
-        .setLabel("Cash Out")
-        .setStyle(ButtonStyle.Danger)
-    );
+    // Create a row for the cash out button
+    const row = new ActionRowBuilder()
+      .addComponents(
+        new ButtonBuilder()
+          .setCustomId('cashout')
+          .setLabel('Cash Out 🛑')
+          .setStyle(ButtonStyle.Success)
+      );
 
-    await interaction.reply({ embeds: [crashEmbed], components: [row] });
-    const message = await interaction.fetchReply();
-
-    let hasCashedOut = false;
-    const minMultiplierStep = 0.01;
-    const maxMultiplierStep = 0.1;
-
-    // Function to update the multiplier with random intervals
-    const updateMultiplier = () => {
-      if (hasCashedOut) return;
-
-      // Random increment for the multiplier
-      const increment =
-        Math.random() * (maxMultiplierStep - minMultiplierStep) +
-        minMultiplierStep;
-      crashMultiplier += increment;
-
-      // Edit the embed with the new multiplier
-      const updatedEmbed = new EmbedBuilder()
-        .setTitle("💥 Crash Game")
-        .setDescription(`Multiplier: **${crashMultiplier.toFixed(2)}x**`)
-        .setColor(0xffa500) // Keep orange color while in progress
-        .setFooter({ text: "Press the stop button to cash out!" });
-
-      message.edit({ embeds: [updatedEmbed], components: [row] });
-
-      // Random time for the game to end (between 5 and 30 seconds)
-      const nextUpdateTime = Math.random() * 3000 + 2000; // Between 2000ms and 5000ms
-      setTimeout(() => {
-        if (!hasCashedOut) {
-          collector.stop("crashed"); // Stop collector if not cashed out
-        }
-      }, nextUpdateTime);
-    };
-
-    // Start updating the multiplier
-    updateMultiplier();
-
-    // Create a collector for the Cash Out button
-    const collector = message.createMessageComponentCollector({ time: 30000 }); // Time limit for the game: 30 seconds
-
-    collector.on("collect", async (buttonInteraction) => {
-      if (buttonInteraction.customId === "cashout") {
-        hasCashedOut = true;
-        const winnings = Math.floor(betAmount * crashMultiplier);
-        player.balance += winnings; // Add winnings to player's balance
-        await player.save();
-
-        const winningsEmbed = new EmbedBuilder()
-          .setTitle("🎉 Congratulations!")
-          .setDescription(
-            `You cashed out at **${crashMultiplier.toFixed(
-              2
-            )}x** and won **${winnings} 💰**!`
-          )
-          .setColor(0x00ff00) // Green color for a successful outcome
-          .addFields(
-            { name: "Bet Amount", value: `${betAmount} 💰`, inline: true },
-            {
-              name: "Multiplier",
-              value: `${crashMultiplier.toFixed(2)}x`,
-              inline: true,
-            },
-            { name: "Winnings", value: `${winnings} 💰`, inline: true }
-          )
-          .setFooter({
-            text: "Great timing! You cashed out just in time.",
-            iconURL: interaction.user.displayAvatarURL(),
-          })
-          .setTimestamp();
-
-        await buttonInteraction.update({
-          embeds: [winningsEmbed],
-          components: [],
-        });
-      }
+    // Send initial embed with multiplier
+    const initialEmbed = await interaction.reply({
+      embeds: [{
+        title: 'CRASH 💥',
+        description: `Multiplier:\n**x${multiplier.toFixed(1)}**`,
+        color: 0x00ff00,
+      }],
+      components: [row],
+      fetchReply: true,
     });
 
-    collector.on("end", async (reason) => {
-      if (!hasCashedOut) {
-        // If the game ends and the user hasn't cashed out
-        const lostEmbed = new EmbedBuilder()
-          .setTitle("💥 CRASH 💥 - You Lost!")
-          .setDescription(
-            `Your bet: **${betAmount} 🪙**\n\nMultiplier:\n**x${crashMultiplier.toFixed(
-              2
-            )}**\n\nCRASHED!\n\nLost: **${betAmount} 🪙**\n\nYour cash: **${
-              player.balance + betAmount
-            } 🪙**`
-          )
-          .setColor(0xff0000) // Red for a failed outcome
-          .setFooter({ text: "Better luck next time!" });
+    // Start the multiplier update loop
+    const updateMultiplier = setInterval(() => {
+      if (!crashed) {
+        multiplier += 0.1; // Increment by 0.1
 
-        player.balance += betAmount; // Refund the bet amount
-        await player.save();
-
-        await message.edit({ embeds: [lostEmbed], components: [] });
+        // Update the embed with the new multiplier
+        interaction.editReply({
+          embeds: [{
+            title: 'CRASH 💥',
+            description: `Multiplier:\n**x${multiplier.toFixed(1)}**`,
+            color: 0x00ff00,
+          }],
+          components: [row],
+        });
       }
+    }, Math.random() * 2000 + 1000); // Update every 1 to 3 seconds
+
+    // Set a timeout for the crash event
+    const crashTimeout = setTimeout(() => {
+      crashed = true;
+      clearInterval(updateMultiplier); // Stop updating multiplier
+
+      // Player loses their bet amount
+      interaction.followUp({
+        embeds: [{
+          title: 'CRASH 💥 - You Lost!',
+          description: `Your bet: ${betAmount} 🪙\n\nMultiplier:\n**x${multiplier.toFixed(1)}**\n\nCRASHED!\n\nLost: ${betAmount} 🪙\n\nYour cash: ${playerData.balance} 🪙`,
+          color: 0xff0000,
+        }],
+        components: [], // Remove button after crash
+      });
+    }, crashTime);
+
+    // Handle cash out button interaction
+    const filter = (buttonInteraction) => buttonInteraction.customId === 'cashout' && buttonInteraction.user.id === interaction.user.id;
+    const collector = initialEmbed.createMessageComponentCollector({ filter, time: crashTime });
+
+    collector.on('collect', async (buttonInteraction) => {
+      crashed = true;
+      clearInterval(updateMultiplier); // Stop updating multiplier
+      clearTimeout(crashTimeout); // Stop the crash timeout
+
+      // Player wins
+      playerData.balance += betAmount * multiplier; // Calculate total cash after cashing out
+      await playerData.save();
+
+      // Send winning message
+      await buttonInteraction.update({
+        embeds: [{
+          title: 'CRASH 💥 - You Cashed Out!',
+          description: `Your bet: ${betAmount} 🪙\n\nMultiplier:\n**x${multiplier.toFixed(1)}**\n\nYou cashed out successfully!\n\nYour cash: ${playerData.balance} 🪙`,
+          color: 0x00ff00,
+        }],
+        components: [], // Remove button after cash out
+      });
     });
   },
 };
