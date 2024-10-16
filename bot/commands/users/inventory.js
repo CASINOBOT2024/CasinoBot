@@ -36,7 +36,7 @@ module.exports = {
       { name: 'Cava', count: player.swag.cava, emoji: '🍾' },
       { name: 'Castañuelas', count: player.swag.castanuelas, emoji: '🎶' },
       { name: 'Sagrada Familia', count: player.swag.sagradaFamilia, emoji: '🏰' },
-      { name: 'Sol', count: player.swag.sagradaFamilia, emoji: '☀️' },
+      { name: 'Sol', count: player.swag.sol, emoji: '☀️' },
     ];
 
     const inventoryList = inventoryItems
