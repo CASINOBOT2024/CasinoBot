@@ -75,8 +75,8 @@ module.exports = {
       const embed = {
         title: 'Store Items',
         fields: Object.entries(prices).map(([key, price]) => ({
-          name: `**${key.replace(/([A-Z])/g, ' $1').toUpperCase()}:** ${price.toLocaleString()} 💰`,
-          value: `Available quantity: 100`, // Example quantity
+          name: `**${key.replace(/([A-Z])/g, ' $1').toUpperCase()}:**`,
+          value: `${price.toLocaleString()} 💰`,
           inline: true,
         })),
         color: 0x3498db,
