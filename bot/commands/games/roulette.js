@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder } = require("discord.js"); 
 const Player = require("../../../mongoDB/Player");
 
 const ROULETTE_COOLDOWN = 5000; // 5 seconds cooldown
@@ -121,7 +121,7 @@ module.exports = {
         title: `Roulette - You ${isWin ? "Won!" : "Lost!"}`,
         fields: [
           { name: "Your bet:", value: `${betAmount.toLocaleString()} 💰`, inline: false },
-          { name: "Your Bet:", value: prediction.toLocaleString(), inline: false },
+          { name: "Your Prediction:", value: prediction.toLocaleString(), inline: false },
           {
             name: "Ball landed on:",
             value: `${result} (${
@@ -138,6 +138,7 @@ module.exports = {
       };
 
       let experienceGained = 0; // Initialize experience gain variable
+      let highestLevelGained = player.level; // Track the highest level gained in this session
 
       if (isWin) {
         // Calculate winnings
@@ -157,22 +158,13 @@ module.exports = {
         // Add experience for winning (reduced to half)
         experienceGained = Math.floor(winnings / 200); // Reduced: 0.5 XP for every 100 currency won
         player.experience += experienceGained;
-        messageEmbed.fields.push({
-          name: "XP Gained:",
-          value: `${experienceGained.toLocaleString()} XP`,
-          inline: false,
-        });
-
+        
         // Level up logic
         const xpNeeded = player.level * 100; // Example: 100 XP needed for level 1, 200 for level 2, etc.
         while (player.experience >= xpNeeded) {
           player.level += 1; // Level up
           player.experience -= xpNeeded; // Reduce experience by the required amount
-          messageEmbed.fields.push({
-            name: "Level Up!",
-            value: `You are now level ${player.level}!`,
-            inline: false,
-          });
+          highestLevelGained = player.level; // Update highest level gained
         }
 
         // Check for balloon or mobile win (10% chance), but only one reward
@@ -214,6 +206,15 @@ module.exports = {
       // Update last roulette time for the user
       player.lastRoulette = Date.now();
       cooldowns[interaction.user.id] = Date.now() + ROULETTE_COOLDOWN; // Set cooldown for this user
+
+      // Add level-up message only if the highest level gained is greater than the original level
+      if (highestLevelGained > player.level) {
+        messageEmbed.fields.push({
+          name: "Level Up!",
+          value: `You are now level ${highestLevelGained}!`,
+          inline: false,
+        });
+      }
 
       // Edit the original reply to show the result
       await interaction.editReply({ embeds: [messageEmbed] });
