@@ -1,114 +1,110 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const Player = require('../../../mongoDB/Player');
+const { SlashCommandBuilder } = require("discord.js");
+const Player = require("../../../mongoDB/Player");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('buy')
-    .setDescription('Buy items from the shop')
-    .addStringOption(option =>
-      option.setName('item')
-        .setDescription('The item you want to buy')
-        .setRequired(false)
+    .setName("buy")
+    .setDescription("Buy items from the store")
+    .addStringOption((option) =>
+      option
+        .setName("item")
+        .setDescription("Choose an item to buy")
+        .setRequired(true)
         .addChoices(
-          { name: '🇪🇸 Spanish Flag', value: '🇪🇸 Spanish Flag' },
-          { name: '🧉 Mate', value: '🧉 Mate' },
-          { name: '🥘 Paella', value: '🥘 Paella' },
-          { name: '🍷 Wine', value: '🍷 Wine' },
-          { name: '🎺 Flamenco Trumpet', value: '🎺 Flamenco Trumpet' },
-          { name: '👒 Sombrero', value: '👒 Sombrero' },
-          { name: '⚽ Soccer Ball', value: '⚽ Soccer Ball' },
-          { name: '📱 Mobile', value: '📱 Mobile' },
-          { name: '🎈 Balloon', value: '🎈 Balloon' }
+          { name: '🇪🇸 Spanish Flag', value: 'spanishFlag' },
+          { name: '🧉 Mate', value: 'mate' },
+          { name: '🥘 Paella', value: 'paella' },
+          { name: '🍷 Wine', value: 'wine' },
+          { name: '🎺 Flamenco Trumpet', value: 'flamencoTrumpet' },
+          { name: '👒 Sombrero', value: 'sombrero' },
+          { name: '⚽ Soccer Ball', value: 'soccerBall' },
+          { name: '📱 Mobile', value: 'mobile' },
+          { name: '🎈 Balloon', value: 'balloon' },
+          { name: '🐖 Jamón', value: 'jamon' },
+          { name: '🎸 Guitarra', value: 'guitarra' },
+          { name: '🐂 Torero', value: 'torero' },
+          { name: '💃 Flamenco', value: 'flamenco' },
+          { name: '💤 Siesta', value: 'siesta' },
+          { name: '🍾 Cava', value: 'cava' },
+          { name: '🎶 Castañuelas', value: 'castanuelas' },
+          { name: '🏰 Sagrada Familia', value: 'sagradaFamilia' },
+          { name: '⚽ Fútbol', value: 'futbol' },
+          { name: '🍷 Vino', value: 'vino' },
+          { name: '☀️ Sol', value: 'sol' },
         )
     )
-    .addIntegerOption(option =>
-      option.setName('quantity')
-        .setDescription('The quantity you want to buy')
-        .setRequired(false)
+    .addIntegerOption((option) =>
+      option
+        .setName("amount")
+        .setDescription("Amount of items to buy")
+        .setRequired(true)
     ),
-  category: 'economy',
-  async execute(interaction) {
-    const itemName = interaction.options.getString('item');
-    const quantity = interaction.options.getInteger('quantity') || 1;
-    
-    // Price list for each item
-    const itemPrices = {
-      '🇪🇸 Spanish Flag': 100000,
-      '🧉 Mate': 150000,
-      '🥘 Paella': 500000,
-      '🍷 Wine': 250000,
-      '🎺 Flamenco Trumpet': 350000,
-      '👒 Sombrero': 200000,
-      '⚽ Soccer Ball': 300000,
-      '📱 Mobile': 700000,
-      '🎈 Balloon': 50000
+  category: "game",
+  usage: "Buy items from the store",
+  async execute(interaction, client) {
+    const item = interaction.options.getString("item");
+    const amount = interaction.options.getInteger("amount");
+    const prices = {
+      spanishFlag: 50000,
+      mate: 50000,
+      paella: 100000,
+      wine: 80000,
+      flamencoTrumpet: 90000,
+      sombrero: 40000,
+      soccerBall: 30000, 
+      mobile: 150000, 
+      balloon: 20000,     
+      jamon: 120000,     
+      guitarra: 110000,    
+      torero: 140000, 
+      flamenco: 80000,        
+      siesta: 70000,         
+      cava: 100000,       
+      castanuelas: 85000,     
+      sagradaFamilia: 200000, 
+      futbol: 110000,      
+      vino: 90000,      
+      sol: 50000,        
     };
 
-    // Get the player's data from the database
     let player = await Player.findOne({ userId: interaction.user.id });
     if (!player) {
-      player = new Player({
-        userId: interaction.user.id,
-        balance: 0,
-        level: 1,
-        experience: 0,
-        maxBet: 0,
-        swag: {},
-        lastDaily: 0,
-        lastRoulette: 0,
+      return interaction.reply({
+        content: "You don't have an account yet! Please create one first.",
+        ephemeral: true,
       });
-      await player.save();
     }
 
-    // If no item is specified, show the prices in an embed
-    if (!itemName) {
-      const shopEmbed = new EmbedBuilder()
-        .setTitle('🛒 Shop')
-        .setDescription('Here are the items you can buy:')
-        .setColor(0x3498db);
-
-      for (const [item, price] of Object.entries(itemPrices)) {
-        shopEmbed.addFields({ name: item, value: `Price: ${price.toLocaleString()} 💰`, inline: true });
-      }
-
-      return interaction.reply({ embeds: [shopEmbed] });
-    }
-
-    const itemPrice = itemPrices[itemName];
-
-    if (!itemPrice) {
-      return interaction.reply({ content: 'This item is not available in the shop.', ephemeral: true });
-    }
-
-    const totalCost = itemPrice * quantity;
+    const totalCost = prices[item] * amount;
 
     if (player.balance < totalCost) {
       return interaction.reply({
-        content: `You don't have enough money to buy ${quantity}x ${itemName}. You need ${totalCost.toLocaleString()} 💰.`,
-        ephemeral: true
+        embeds: [
+          {
+            title: "Error",
+            description: "You do not have enough money to buy this item.",
+            color: 0xff0000,
+          },
+        ],
+        ephemeral: true,
       });
     }
 
-    // Deduct the money and add the item to the player's inventory
+    // Deduct the cost from the player's balance and add the item to swag
     player.balance -= totalCost;
+    player.swag[item] += amount;
 
-    if (player.swag[itemName]) {
-      player.swag[itemName] += quantity;
-    } else {
-      player.swag[itemName] = quantity;
-    }
-
+    // Save the updated player data
     await player.save();
 
-    const purchaseEmbed = new EmbedBuilder()
-      .setTitle('🛒 Purchase Successful!')
-      .setDescription(`You have successfully purchased **${quantity}x ${itemName}**.`)
-      .addFields(
-        { name: 'Total Cost:', value: `${totalCost.toLocaleString()} 💰`, inline: true },
-        { name: 'Your new balance:', value: `${player.balance.toLocaleString()} 💰`, inline: true }
-      )
-      .setColor(0x00ff00);
-
-    await interaction.reply({ embeds: [purchaseEmbed] });
+    return interaction.reply({
+      embeds: [
+        {
+          title: "Purchase Successful!",
+          description: `You bought ${amount} ${item} for ${totalCost.toLocaleString()} 💰.`,
+          color: 0x00ff00,
+        },
+      ],
+    });
   },
 };
