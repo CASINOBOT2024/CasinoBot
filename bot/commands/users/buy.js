@@ -40,7 +40,7 @@ module.exports = {
     const item = interaction.options.getString("item");
     const amount = interaction.options.getInteger("amount") || 1; // Default amount is 1
     const prices = {
-      spanishFlag: 50000,
+      spanishFlag: 1000000,
       mate: 50000,
       paella: 100000,
       wine: 80000,
