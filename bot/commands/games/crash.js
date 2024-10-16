@@ -156,7 +156,7 @@ module.exports = {
       await buttonInteraction.update({
         embeds: [{
           title: 'CRASH 💥 - You Cashed Out!',
-          description: `Your bet: **${betAmount} 🪙**\n\nMultiplier:\n**x${multiplier.toFixed(1)}**\n\nYou won: **${betAmoun * multiplier}**\n\nYour cash: **${playerData.balance.toLocaleString()} 🪙**`,
+          description: `Your bet: **${betAmount} 🪙**\n\nMultiplier:\n**x${multiplier.toFixed(1)}**\n\nYou won: **${betAmount * multiplier}**\n\nYour cash: **${playerData.balance.toLocaleString()} 🪙**`,
           color: 0x00ff00,
         }],
         components: [], // Remove button after cash out
