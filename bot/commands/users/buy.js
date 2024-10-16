@@ -28,7 +28,7 @@ module.exports = {
       option.setName('quantity')
         .setDescription('The quantity you want to buy')
     ),
-  category: 'economy',
+  category: 'users',
   usage: "Buy items from the shop",
   async execute(interaction) {
     const player = await Player.findOne({ userId: interaction.user.id });
