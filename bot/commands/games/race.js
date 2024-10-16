@@ -45,6 +45,21 @@ module.exports = {
   category: "game",
   usage: "Bet on a horse to win big!",
   async execute(interaction, client) {
+    
+    const betAmount = interaction.options.getInteger("bet");
+    if(betAmoun > 30000) {
+      return interaction.reply({
+        embeds: [
+          {
+            title: "Cooldown Active",
+            description: `The max bet is **30.000 🪙**. Please enter a lower bet and try again.`,
+            color: 0xff0000,
+          },
+        ],
+        ephemeral: true,
+      });
+    }
+    
     let player = await Player.findOne({ userId: interaction.user.id });
     if (!player) {
       // If the player doesn't exist, create a new one
@@ -83,8 +98,7 @@ module.exports = {
         ephemeral: true,
       });
     }
-
-    const betAmount = interaction.options.getInteger("bet");
+    
     const chosenHorseIndex = parseInt(interaction.options.getString("horse"));
 
     if (betAmount > player.balance) {
