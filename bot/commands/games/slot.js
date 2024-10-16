@@ -13,10 +13,10 @@ module.exports = {
         .setRequired(true)
     ),
   category: 'games',
+  usage: "Play the slot machine with a bet!",
   async execute(interaction, client) {
     const betAmount = interaction.options.getInteger('bet');
 
-    // Fetch player data from the database
     const playerData = await Player.findOne({ userId: interaction.user.id });
     if (!playerData) {
       // If the player doesn't exist, create a new one
@@ -70,6 +70,7 @@ module.exports = {
         ephemeral: true,
       });
     }
+
     // Deduct the bet from the player's balance
     playerData.balance -= betAmount;
     await playerData.save();
@@ -88,30 +89,8 @@ module.exports = {
     const slotEmbed = new EmbedBuilder()
       .setColor(0x3498DB)
       .setTitle('🎰 Slot Machine Spin!')
-      .setDescription('Let\'s see what you got!');
-
-    // Show the spinning effect
-    await interaction.reply({ embeds: [slotEmbed] });
-    
-    // Simulate spinning
-    const spinningMessage = await interaction.followUp({ content: 'Spinning...', ephemeral: true });
-    
-    for (let i = 0; i < 5; i++) {
-      const spinResultsAnim = [
-        symbols[Math.floor(Math.random() * symbols.length)],
-        symbols[Math.floor(Math.random() * symbols.length)],
-        symbols[Math.floor(Math.random() * symbols.length)]
-      ];
-      await spinningMessage.edit({
-        content: `\`\`\`${spinResultsAnim.join('  ')}\`\`\``
-      });
-      await new Promise(resolve => setTimeout(resolve, 500)); // Wait for 0.5 seconds between spins
-    }
-
-    // Reveal final results
-    await spinningMessage.edit({
-      content: `Final Result:\n\`\`\`${spinResults.join('  ')}\`\`\``
-    });
+      .setDescription(`${spinResults.join(' | ')}`)
+      .setFooter({ text: `You bet: ${betAmount.toLocaleString()} 🪙` });
 
     // Determine winnings
     const winnings = calculateWinnings(spinResults, betAmount);
@@ -122,18 +101,13 @@ module.exports = {
 
     // Update embed with results
     const resultMessage = winnings > 0 
-      ? `🎉 You win! You gained: **${winnings} 🪙**.`
+      ? `🎉 You win! You gained: **${winnings.toLocaleString()} 🪙**.`
       : `😢 You lose! Better luck next time!`;
 
-    slotEmbed.addFields(
-      { name: '🎲 Results', value: `\`\`\`${spinResults.join('  ')}\`\`\``, inline: false },
-      { name: '💰 Bet Amount', value: `${betAmount} 🪙`, inline: true },
-      { name: '🪙 Total Balance', value: `${playerData.balance} 🪙`, inline: true },
-      { name: 'Result', value: resultMessage }
-    );
-
+    slotEmbed.addFields({ name: 'Result', value: resultMessage });
+    
     // Reply with the embed
-    await interaction.followUp({ embeds: [slotEmbed] });
+    await interaction.reply({ embeds: [slotEmbed] });
   },
 };
 
