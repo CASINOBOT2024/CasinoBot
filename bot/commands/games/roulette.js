@@ -142,7 +142,7 @@ module.exports = {
 
       if (isWin) {
         // Calculate winnings
-        let winnings = prediction === "green" ? betAmount * 35 : betAmount * 2;
+        let winnings = prediction === "green" ? betAmount * 3 : betAmount * 1;
         player.balance += winnings; // Add winnings to balance
         messageEmbed.fields.push({
           name: "You won:",
@@ -206,15 +206,6 @@ module.exports = {
       // Update last roulette time for the user
       player.lastRoulette = Date.now();
       cooldowns[interaction.user.id] = Date.now() + ROULETTE_COOLDOWN; // Set cooldown for this user
-
-      // Add level-up message only if the highest level gained is greater than the original level
-      if (highestLevelGained > player.level) {
-        messageEmbed.fields.push({
-          name: "Level Up!",
-          value: `You are now level ${highestLevelGained}!`,
-          inline: false,
-        });
-      }
 
       // Edit the original reply to show the result
       await interaction.editReply({ embeds: [messageEmbed] });
