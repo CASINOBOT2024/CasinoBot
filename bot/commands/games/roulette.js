@@ -33,6 +33,19 @@ module.exports = {
     const betAmount = interaction.options.getInteger("bet");
     const prediction = interaction.options.getString("prediction");
 
+    if(betAmoun > 30000) {
+      return interaction.reply({
+        embeds: [
+          {
+            title: "Cooldown Active",
+            description: `The max bet is **30.000 🪙**. Please enter a lower bet and try again.`,
+            color: 0xff0000,
+          },
+        ],
+        ephemeral: true,
+      });
+    }
+    
     let player = await Player.findOne({ userId: interaction.user.id });
     if (!player) {
       // If the player doesn't exist, create a new one
