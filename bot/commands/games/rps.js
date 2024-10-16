@@ -1,6 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Player = require("../../../mongoDB/Player");
 
+const cooldowns = {};
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('rps')
