@@ -9,7 +9,8 @@ module.exports = {
       option.setName('user')
         .setDescription('The user whose inventory you want to view')
     ),
-  category: 'economy',
+  category: 'users',
+  usage: "View your inventory or someone else\'s",
   async execute(interaction) {
     const targetUser = interaction.options.getUser('user') || interaction.user;
 
