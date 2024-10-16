@@ -15,11 +15,8 @@ module.exports = {
           { name: '🧉 Mate', value: 'mate' },
           { name: '🥘 Paella', value: 'paella' },
           { name: '🍷 Wine', value: 'wine' },
-          { name: '🎺 Flamenco Trumpet', value: 'flamencoTrumpet' },
           { name: '👒 Sombrero', value: 'sombrero' },
           { name: '⚽ Soccer Ball', value: 'soccerBall' },
-          { name: '📱 Mobile', value: 'mobile' },
-          { name: '🎈 Balloon', value: 'balloon' },
           { name: '🐖 Jamón', value: 'jamon' },
           { name: '🎸 Guitarra', value: 'guitarra' },
           { name: '🐂 Torero', value: 'torero' },
@@ -28,8 +25,6 @@ module.exports = {
           { name: '🍾 Cava', value: 'cava' },
           { name: '🎶 Castañuelas', value: 'castanuelas' },
           { name: '🏰 Sagrada Familia', value: 'sagradaFamilia' },
-          { name: '⚽ Fútbol', value: 'futbol' },
-          { name: '🍷 Vino', value: 'vino' },
           { name: '☀️ Sol', value: 'sol' },
         )
     )
