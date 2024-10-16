@@ -39,7 +39,7 @@ module.exports = {
         .setDescription("Amount of items to buy")
         .setRequired(false) // Make this option not required
     ),
-  category: "game",
+  category: "users",
   usage: "Buy items from the store",
   async execute(interaction, client) {
     const item = interaction.options.getString("item");
