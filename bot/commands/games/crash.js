@@ -11,25 +11,22 @@ const cooldowns = {};
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("crash")
-    .setDescription("Play the Crash game")
-    .addIntegerOption((option) =>
-      option
-        .setName("bet")
-        .setDescription("Amount of money to bet")
+    .setName('rps')
+    .setDescription('Play Rock Paper Scissors with a bet!')
+    .addIntegerOption(option =>
+      option.setName('bet')
+        .setDescription('Amount to bet')
         .setRequired(true)
     ),
-  category: "game",
-  usage: "Play the Crash game",
-  async execute(interaction) {
-    // Get the bet amount from the interaction
-    const betAmount = interaction.options.getInteger("bet");
+  category: 'games',
+  async execute(interaction, client) {
+    const betAmount = interaction.options.getInteger('bet');
 
-    // Retrieve the player from the database
-    const player = await Player.findOne({ userId: interaction.user.id });
-    if (!player) {
+    // Fetch player data from the database
+    const playerData = await Player.findOne({ userId: interaction.user.id });
+    if (!playerData) {
       // If the player doesn't exist, create a new one
-      player = new Player({
+      playerData = new Player({
         userId: interaction.user.id,
         balance: 0,
         level: 1,
@@ -42,7 +39,7 @@ module.exports = {
         lastDaily: 0,
         lastRoulette: 0,
       });
-      await player.save();
+      await playerData.save();
     }
 
     const currentTime = Date.now();
@@ -67,7 +64,7 @@ module.exports = {
       });
     }
 
-    if (betAmount > player.balance) {
+    if (betAmount > playerData.balance) {
       return interaction.reply({
         embeds: [
           {
@@ -80,88 +77,70 @@ module.exports = {
       });
     }
 
+    // Update player's balance
     playerData.balance -= betAmount;
     await playerData.save();
 
-    let multiplier = 1.0;
-    const crashTime = Math.random() * 15000 + 5000; // Between 5 and 20 seconds
-    let crashed = false;
-
-    // Create a row for the cash out button
+    // Create buttons for Rock, Paper, Scissors
     const row = new ActionRowBuilder()
       .addComponents(
-        new ButtonBuilder()
-          .setCustomId('cashout')
-          .setLabel('Cash Out 🛑')
-          .setStyle(ButtonStyle.Success)
+        new ButtonBuilder().setCustomId('rock').setLabel('🪨 Rock').setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId('paper').setLabel('📄 Paper').setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId('scissors').setLabel('✂️ Scissors').setStyle(ButtonStyle.Primary),
       );
 
-    // Send initial embed with multiplier
-    const initialEmbed = await interaction.reply({
-      embeds: [{
-        title: 'CRASH 💥',
-        description: `Multiplier:\n**x${multiplier.toFixed(1)}**`,
-        color: 0x00ff00,
-      }],
+    // Send the initial message with options
+    await interaction.reply({
+      content: 'Choose your move!',
       components: [row],
-      fetchReply: true,
     });
 
-    // Start the multiplier update loop
-    const updateMultiplier = setInterval(() => {
-      if (!crashed) {
-        multiplier += 0.1; // Increment by 0.1
+    const message = await interaction.fetchReply(); // Fetch the reply message
 
-        // Update the embed with the new multiplier
-        interaction.editReply({
-          embeds: [{
-            title: 'CRASH 💥',
-            description: `Multiplier:\n**x${multiplier.toFixed(1)}**`,
-            color: 0x00ff00,
-          }],
-          components: [row],
-        });
-      }
-    }, Math.random() * 2000 + 1000); // Update every 1 to 3 seconds
+    // Filter for button interactions
+    const filter = (buttonInteraction) => {
+      return buttonInteraction.user.id === interaction.user.id;
+    };
 
-    // Set a timeout for the crash event
-    const crashTimeout = setTimeout(() => {
-      crashed = true;
-      clearInterval(updateMultiplier); // Stop updating multiplier
-
-      // Player loses their bet amount
-      interaction.followUp({
-        embeds: [{
-          title: 'CRASH 💥 - You Lost!',
-          description: `Your bet: ${betAmount} 🪙\n\nMultiplier:\n**x${multiplier.toFixed(1)}**\n\nCRASHED!\n\nLost: ${betAmount} 🪙\n\nYour cash: ${playerData.balance} 🪙`,
-          color: 0xff0000,
-        }],
-        components: [], // Remove button after crash
-      });
-    }, crashTime);
-
-    // Handle cash out button interaction
-    const filter = (buttonInteraction) => buttonInteraction.customId === 'cashout' && buttonInteraction.user.id === interaction.user.id;
-    const collector = initialEmbed.createMessageComponentCollector({ filter, time: crashTime });
+    const collector = message.createMessageComponentCollector({ filter, time: 60000 }); // 60 seconds for selection
 
     collector.on('collect', async (buttonInteraction) => {
-      crashed = true;
-      clearInterval(updateMultiplier); // Stop updating multiplier
-      clearTimeout(crashTimeout); // Stop the crash timeout
+      const userChoice = buttonInteraction.customId;
+      const botChoice = ['rock', 'paper', 'scissors'][Math.floor(Math.random() * 3)];
 
-      // Player wins
-      playerData.balance += betAmount * multiplier; // Calculate total cash after cashing out
-      await playerData.save();
+      let result;
+      if (userChoice === botChoice) {
+        result = 'It\'s a tie! 🤝';
+        playerData.balance += betAmount; // Refund bet
+      } else if (
+        (userChoice === 'rock' && botChoice === 'scissors') ||
+        (userChoice === 'paper' && botChoice === 'rock') ||
+        (userChoice === 'scissors' && botChoice === 'paper')
+      ) {
+        result = 'You win! 🎉';
+        playerData.balance += betAmount * 2; // Double the bet
+      } else {
+        result = 'You lose! 😢';
+      }
 
-      // Send winning message
+      await playerData.save(); // Update player balance in the database
+
       await buttonInteraction.update({
-        embeds: [{
-          title: 'CRASH 💥 - You Cashed Out!',
-          description: `Your bet: ${betAmount} 🪙\n\nMultiplier:\n**x${multiplier.toFixed(1)}**\n\nYou cashed out successfully!\n\nYour cash: ${playerData.balance} 🪙`,
-          color: 0x00ff00,
-        }],
-        components: [], // Remove button after cash out
+        content: `You chose: ${userChoice}\nBot chose: ${botChoice}\n\n${result}\nYour new balance: ${playerData.balance} 🪙`,
+        components: [], // Disable buttons after interaction
       });
+
+      collector.stop(); // Stop the collector after handling the choice
+    });
+
+    collector.on('end', async (collected) => {
+      if (collected.size === 0) {
+        await message.edit({
+          content: 'Time is up! You didn\'t make a choice.',
+          components: [],
+        });
+      }
     });
   },
 };
+
