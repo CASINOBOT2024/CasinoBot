@@ -90,7 +90,7 @@ module.exports = {
       .setColor(0x3498DB)
       .setTitle('🎰 Slot Machine Spin!')
       .setDescription(`${spinResults.join(' | ')}`)
-      .setFooter({ text: `You bet: ${betAmount} 🪙` });
+      .setFooter({ text: `You bet: ${betAmount.toLocaleString(} 🪙` });
 
     // Determine winnings
     const winnings = calculateWinnings(spinResults, betAmount);
@@ -101,7 +101,7 @@ module.exports = {
 
     // Update embed with results
     const resultMessage = winnings > 0 
-      ? `🎉 You win! You gained: ${winnings} 🪙.`
+      ? `🎉 You win! You gained: **${winnings.toLocaleString(} 🪙**.`
       : `😢 You lose! Better luck next time!`;
 
     slotEmbed.addFields({ name: 'Result', value: resultMessage });
