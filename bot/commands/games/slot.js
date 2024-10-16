@@ -121,11 +121,11 @@ function calculateWinnings(results, betAmount) {
 
   // Check for diamonds
   if (symbolCount['💎'] === 3) {
-    return betAmount * 15; // 3 diamonds win 50x the bet
+    return betAmount * 7; // 3 diamonds win 50x the bet
   } else if (symbolCount['💎'] === 2) {
-    return betAmount * 8; // 2 diamonds win 5x the bet
+    return betAmount * 5; // 2 diamonds win 5x the bet
   } else if (symbolCount['💎'] === 1) {
-    return betAmount * 5; // 1 diamond wins 1.5x the bet
+    return betAmount * 3; // 1 diamond wins 1.5x the bet
   }
 
   // Check for other winning combinations
