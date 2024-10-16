@@ -151,12 +151,13 @@ module.exports = {
       // Player wins
       playerData.balance += betAmount * multiplier; // Calculate total cash after cashing out
       await playerData.save();
-
+      
+      const won = betAmount * multiplier;
       // Send winning message
       await buttonInteraction.update({
         embeds: [{
           title: 'CRASH 💥 - You Cashed Out!',
-          description: `Your bet: **${betAmount} 🪙**\n\nMultiplier:\n**x${multiplier.toFixed(1)}**\n\nYou won: **${betAmount * multiplier}**\n\nYour cash: **${playerData.balance.toLocaleString()} 🪙**`,
+          description: `Your bet: **${betAmount} 🪙**\n\nMultiplier:\n**x${multiplier.toFixed(1)}**\n\nYou won: **${won.toLocaleString()}**\n\nYour cash: **${playerData.balance.toLocaleString()} 🪙**`,
           color: 0x00ff00,
         }],
         components: [], // Remove button after cash out
