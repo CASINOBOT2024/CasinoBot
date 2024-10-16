@@ -8,7 +8,7 @@ module.exports = {
     .addUserOption((option) =>
       option.setName("user").setDescription("The user whose inventory to view")
     ),
-  category: "game",
+  category: "users",
   usage: "View your or another user's inventory",
   async execute(interaction, client) {
     const user = interaction.options.getUser("user") || interaction.user;
