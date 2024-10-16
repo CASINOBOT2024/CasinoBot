@@ -1,4 +1,10 @@
-const { SlashCommandBuilder } = require('discord.js');
+const {
+  SlashCommandBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  EmbedBuilder,
+} = require("discord.js");
 const Player = require("../../../mongoDB/Player");
 
 const cooldowns = {};
@@ -6,28 +12,16 @@ const cooldowns = {};
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('rps')
-    .setDescription('Play Rock, Paper, Scissors with a bet!')
-    .addIntegerOption(option => 
+    .setDescription('Play Rock Paper Scissors with a bet!')
+    .addIntegerOption(option =>
       option.setName('bet')
         .setDescription('Amount to bet')
         .setRequired(true)
-    )
-    .addStringOption(option => 
-      option.setName('choice')
-        .setDescription('Your choice: rock, paper, or scissors')
-        .setRequired(true)
-        .addChoices(
-          { name: 'Rock', value: 'rock' },
-          { name: 'Paper', value: 'paper' },
-          { name: 'Scissors', value: 'scissors' },
-        )),
-  category: 'game',
-  usage: "Play Rock, Paper, Scissors with a bet!",
+    ),
+  category: 'games',
   async execute(interaction, client) {
     const betAmount = interaction.options.getInteger('bet');
-    const playerChoice = interaction.options.getString('choice');
 
-    
     // Fetch player data from the database
     const playerData = await Player.findOne({ userId: interaction.user.id });
     if (!playerData) {
@@ -69,45 +63,83 @@ module.exports = {
         ephemeral: true,
       });
     }
-    
-    if (!playerData || playerData.balance < betAmount) {
+
+    if (betAmount > playerData.balance) {
       return interaction.reply({
-        content: `You do not have enough money to place this bet. Your current balance is ${playerData ? playerData.balance : 0} 🪙.`,
+        embeds: [
+          {
+            title: "Error",
+            description: "You do not have enough money to place this bet.",
+            color: 0xff0000,
+          },
+        ],
         ephemeral: true,
       });
     }
 
-    // Define the choices
-    const choices = ['rock', 'paper', 'scissors'];
-    const botChoice = choices[Math.floor(Math.random() * choices.length)];
+    // Update player's balance
+    playerData.balance -= betAmount;
+    await playerData.save();
 
-    // Determine the result
-    let resultMessage;
-    if (playerChoice === botChoice) {
-      resultMessage = `It's a tie! Both chose **${playerChoice}**.`;
-    } else if (
-      (playerChoice === 'rock' && botChoice === 'scissors') ||
-      (playerChoice === 'paper' && botChoice === 'rock') ||
-      (playerChoice === 'scissors' && botChoice === 'paper')
-    ) {
-      // Player wins
-      playerData.balance += betAmount;
-      await playerData.save();
-      resultMessage = `You win! You chose **${playerChoice}** and the bot chose **${botChoice}**. You gained ${betAmount} 🪙!`;
-    } else {
-      // Bot wins
-      playerData.balance -= betAmount;
-      await playerData.save();
-      resultMessage = `You lost! You chose **${playerChoice}** and the bot chose **${botChoice}**. You lost ${betAmount} 🪙!`;
-    }
+    // Create buttons for Rock, Paper, Scissors
+    const row = new ActionRowBuilder()
+      .addComponents(
+        new ButtonBuilder().setCustomId('rock').setLabel('🪨 Rock').setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId('paper').setLabel('📄 Paper').setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId('scissors').setLabel('✂️ Scissors').setStyle(ButtonStyle.Primary),
+      );
 
-    // Send the result
-    return interaction.reply({
-      embeds: [{
-        title: 'Rock, Paper, Scissors 🎮',
-        description: resultMessage,
-        color: playerChoice === botChoice ? 0x3498DB : (resultMessage.includes('lost') ? 0xff0000 : 0x00ff00),
-      }],
+    // Send the initial message with options
+    await interaction.reply({
+      content: 'Choose your move!',
+      components: [row],
+    });
+
+    const message = await interaction.fetchReply(); // Fetch the reply message
+
+    // Filter for button interactions
+    const filter = (buttonInteraction) => {
+      return buttonInteraction.user.id === interaction.user.id;
+    };
+
+    const collector = message.createMessageComponentCollector({ filter, time: 60000 }); // 60 seconds for selection
+
+    collector.on('collect', async (buttonInteraction) => {
+      const userChoice = buttonInteraction.customId;
+      const botChoice = ['rock', 'paper', 'scissors'][Math.floor(Math.random() * 3)];
+
+      let result;
+      if (userChoice === botChoice) {
+        result = 'It\'s a tie! 🤝';
+        playerData.balance += betAmount; // Refund bet
+      } else if (
+        (userChoice === 'rock' && botChoice === 'scissors') ||
+        (userChoice === 'paper' && botChoice === 'rock') ||
+        (userChoice === 'scissors' && botChoice === 'paper')
+      ) {
+        result = 'You win! 🎉';
+        playerData.balance += betAmount * 2; // Double the bet
+      } else {
+        result = 'You lose! 😢';
+      }
+
+      await playerData.save(); // Update player balance in the database
+
+      await buttonInteraction.update({
+        content: `You chose: ${userChoice}\nBot chose: ${botChoice}\n\n${result}\nYour new balance: ${playerData.balance} 🪙`,
+        components: [], // Disable buttons after interaction
+      });
+
+      collector.stop(); // Stop the collector after handling the choice
+    });
+
+    collector.on('end', async (collected) => {
+      if (collected.size === 0) {
+        await message.edit({
+          content: 'Time is up! You didn\'t make a choice.',
+          components: [],
+        });
+      }
     });
   },
 };
