@@ -33,7 +33,7 @@ module.exports = async (client) => {
 
   try {
     await rest.put(
-      Routes.applicationGuildCommands(process.env.BOT_ID, process.env.GUILD_ID),
+      Routes.applicationommands(process.env.BOT_ID),
       { body: commands }
     );
 
