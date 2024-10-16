@@ -1,21 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const Player = require('../../../mongoDB/Player');
 
-const shopItems = {
-  "🧑‍🎤 Flamenco Hat": 500000,
-  "🥘 Paella Pan": 1000000,
-  "🪁 Kite": 750000,
-  "🎸 Spanish Guitar": 1200000,
-  "🍷 Rioja Wine": 2000000,
-  "🦜 Parrot": 3000000,
-  "💃 Flamenco Dress": 5000000,
-  "🛵 Vespa": 10000000,
-  "🧲 Magnet": 150000,
-  "🎨 Painting": 2500000,
-  "🍇 Grapes": 50000,
-  "⚽ Football": 800000
-};
-
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('buy')
@@ -23,80 +8,107 @@ module.exports = {
     .addStringOption(option =>
       option.setName('item')
         .setDescription('The item you want to buy')
+        .setRequired(false)
+        .addChoices(
+          { name: '🇪🇸 Spanish Flag', value: '🇪🇸 Spanish Flag' },
+          { name: '🧉 Mate', value: '🧉 Mate' },
+          { name: '🥘 Paella', value: '🥘 Paella' },
+          { name: '🍷 Wine', value: '🍷 Wine' },
+          { name: '🎺 Flamenco Trumpet', value: '🎺 Flamenco Trumpet' },
+          { name: '👒 Sombrero', value: '👒 Sombrero' },
+          { name: '⚽ Soccer Ball', value: '⚽ Soccer Ball' },
+          { name: '📱 Mobile', value: '📱 Mobile' },
+          { name: '🎈 Balloon', value: '🎈 Balloon' }
+        )
     )
     .addIntegerOption(option =>
       option.setName('quantity')
         .setDescription('The quantity you want to buy')
+        .setRequired(false)
     ),
-  category: 'users',
-  usage: "Buy items from the shop",
+  category: 'economy',
   async execute(interaction) {
-    const player = await Player.findOne({ userId: interaction.user.id });
+    const itemName = interaction.options.getString('item');
+    const quantity = interaction.options.getInteger('quantity') || 1;
+    
+    // Price list for each item
+    const itemPrices = {
+      '🇪🇸 Spanish Flag': 100000,
+      '🧉 Mate': 150000,
+      '🥘 Paella': 500000,
+      '🍷 Wine': 250000,
+      '🎺 Flamenco Trumpet': 350000,
+      '👒 Sombrero': 200000,
+      '⚽ Soccer Ball': 300000,
+      '📱 Mobile': 700000,
+      '🎈 Balloon': 50000
+    };
+
+    // Get the player's data from the database
+    let player = await Player.findOne({ userId: interaction.user.id });
     if (!player) {
-      return interaction.reply({
-        content: 'Player not found. Please register first!',
-        ephemeral: true
+      player = new Player({
+        userId: interaction.user.id,
+        balance: 0,
+        level: 1,
+        experience: 0,
+        maxBet: 0,
+        swag: {},
+        lastDaily: 0,
+        lastRoulette: 0,
       });
+      await player.save();
     }
 
-    const item = interaction.options.getString('item');
-    const quantity = interaction.options.getInteger('quantity') || 1;
-
-    if (!item) {
-      // If no item specified, show the shop with prices
-      const embed = new EmbedBuilder()
-        .setTitle('🛒 Spanish Shop Items')
-        .setDescription('Here are the items available for purchase:')
+    // If no item is specified, show the prices in an embed
+    if (!itemName) {
+      const shopEmbed = new EmbedBuilder()
+        .setTitle('🛒 Shop')
+        .setDescription('Here are the items you can buy:')
         .setColor(0x3498db);
 
-      Object.entries(shopItems).forEach(([itemName, price]) => {
-        embed.addFields({
-          name: itemName,
-          value: `${price.toLocaleString()} 💰`,
-          inline: true
-        });
-      });
+      for (const [item, price] of Object.entries(itemPrices)) {
+        shopEmbed.addFields({ name: item, value: `Price: ${price.toLocaleString()} 💰`, inline: true });
+      }
 
-      return interaction.reply({ embeds: [embed] });
+      return interaction.reply({ embeds: [shopEmbed] });
     }
 
-    const itemPrice = shopItems[item];
+    const itemPrice = itemPrices[itemName];
+
     if (!itemPrice) {
+      return interaction.reply({ content: 'This item is not available in the shop.', ephemeral: true });
+    }
+
+    const totalCost = itemPrice * quantity;
+
+    if (player.balance < totalCost) {
       return interaction.reply({
-        content: `The item "${item}" is not available in the shop.`,
+        content: `You don't have enough money to buy ${quantity}x ${itemName}. You need ${totalCost.toLocaleString()} 💰.`,
         ephemeral: true
       });
     }
 
-    const totalPrice = itemPrice * quantity;
+    // Deduct the money and add the item to the player's inventory
+    player.balance -= totalCost;
 
-    if (player.balance < totalPrice) {
-      return interaction.reply({
-        content: `You do not have enough money to buy ${quantity} ${item}(s). Total cost: ${totalPrice.toLocaleString()} 💰.`,
-        ephemeral: true
-      });
-    }
-
-    // Deduct the money from the player's balance
-    player.balance -= totalPrice;
-
-    // Add the item to the player's swag
-    if (player.swag[item]) {
-      player.swag[item] += quantity;
+    if (player.swag[itemName]) {
+      player.swag[itemName] += quantity;
     } else {
-      player.swag[item] = quantity;
+      player.swag[itemName] = quantity;
     }
 
     await player.save();
 
-    const successEmbed = new EmbedBuilder()
-      .setTitle('Purchase Successful')
-      .setDescription(`You bought ${quantity} ${item}(s) for ${totalPrice.toLocaleString()} 💰`)
+    const purchaseEmbed = new EmbedBuilder()
+      .setTitle('🛒 Purchase Successful!')
+      .setDescription(`You have successfully purchased **${quantity}x ${itemName}**.`)
       .addFields(
+        { name: 'Total Cost:', value: `${totalCost.toLocaleString()} 💰`, inline: true },
         { name: 'Your new balance:', value: `${player.balance.toLocaleString()} 💰`, inline: true }
       )
-      .setColor(0x00FF00);
+      .setColor(0x00ff00);
 
-    await interaction.reply({ embeds: [successEmbed] });
-  }
+    await interaction.reply({ embeds: [purchaseEmbed] });
+  },
 };
