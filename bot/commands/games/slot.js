@@ -98,9 +98,7 @@ module.exports = {
 
     // Deduct the bet from the player's balance
     playerData.balance -= betAmount;
-    player.lastSlot = Date.now();
     await playerData.save();
-    cooldowns[interaction.user.id] = Date.now() + SLOT_COOLDOWN;
     
     // Slot machine symbols
     const symbols = ['🍒', '🍋', '🍊', '🍉', '🔔', '⭐', '💎']; // Extend this array for more symbols
@@ -125,7 +123,8 @@ module.exports = {
 
     // Update player data in the database
     await playerData.save();
-
+    player.lastSlot = Date.now();
+    cooldowns[interaction.user.id] = Date.now() + SLOT_COOLDOWN;
     // Update embed with results
     const resultMessage = winnings > 0 
       ? `🎉 You win! You gained: **${winnings.toLocaleString()} 🪙**.`
