@@ -118,9 +118,26 @@ module.exports = {
       .setFooter({ text: `You bet: ${betAmount.toLocaleString()} 🪙` });
 
     // Determine winnings
+    if(winnings > 0 ) {
     const winnings = calculateWinnings(spinResults, betAmount);
     playerData.balance += winnings;
 
+    let experienceGained = 0; // Initialize experience gain variable
+    let highestLevelGained = playerData.level; // Track the highest level gained in this session
+
+    // Add experience for winning (reduced to half)
+    experienceGained = Math.floor(winnings / 200); // Reduced: 0.5 XP for every 100 currency won
+    playerData.experience += experienceGained;
+        
+    // Level up logic
+    const xpNeeded = playerData.level * 100; // Example: 100 XP needed for level 1, 200 for level 2, etc.
+    while (playerData.experience >= xpNeeded) {
+      playerData.level += 1; // Level up
+      playerData.experience -= xpNeeded; // Reduce experience by the required amount
+      highestLevelGained = playerData.level; // Update highest level gained
+    }
+    }
+        
     // Update player data in the database
     await playerData.save();
     playerData.lastSlot = Date.now();
