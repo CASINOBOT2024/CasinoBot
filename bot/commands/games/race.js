@@ -16,6 +16,7 @@ const horses = [
   { emoji: "🦏" },
 ];
 
+const cooldowns = {};
 const RACE_COOLDOWN = 5000; // 2 seconds cooldown
 const EXPERIENCE_GAIN_WIN = 100; // Experience gained for winning
 
