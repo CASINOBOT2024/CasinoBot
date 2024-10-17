@@ -26,7 +26,9 @@ const PlayerSchema = new mongoose.Schema({
   },
   lastDaily: { type: Number, default: 0 },
   lastRoulette: { type: Number, default: 0 },
+  lastCrash: { type: Number, default: 0 },
   lastRace: { type: Number, default: 0 },
+  lastSlot: { type: Number, default: 0 },
 });
 
 const Player = mongoose.model('Player', PlayerSchema);
