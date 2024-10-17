@@ -23,8 +23,6 @@ module.exports = {
   async execute(interaction, client) {
     const betAmount = interaction.options.getInteger('bet');
 
-    
-
     // Fetch player data from the database
     const playerData = await Player.findOne({ userId: interaction.user.id });
     if (!playerData) {
@@ -132,7 +130,9 @@ module.exports = {
     });
 
     const initialMessage = await interaction.fetchReply(); // Fetch the reply message
-
+    playerData.lastCrash = Date.now();
+      
+    cooldowns[interaction.user.id] = Date.now() + CRASH_COOLDOWN;
     // Start the multiplier update loop
     const updateMultiplier = setInterval(() => {
       if (!crashed) {
@@ -178,9 +178,7 @@ module.exports = {
       // Player wins
       playerData.balance += betAmount * multiplier; // Calculate total cash after cashing out
       await playerData.save();
-      playerData.lastCrash = Date.now();
       
-      cooldowns[interaction.user.id] = Date.now() + CRASH_COOLDOWN;
       const won = betAmount * multiplier;
       // Send winning message
       await buttonInteraction.update({
