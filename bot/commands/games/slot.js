@@ -118,8 +118,9 @@ module.exports = {
       .setFooter({ text: `You bet: ${betAmount.toLocaleString()} 🪙` });
 
     // Determine winnings
-    if(winnings > 0 ) {
     const winnings = calculateWinnings(spinResults, betAmount);
+    if(winnings > 0 ) {
+    
     playerData.balance += winnings;
 
     let experienceGained = 0; // Initialize experience gain variable
