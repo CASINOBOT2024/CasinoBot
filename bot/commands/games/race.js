@@ -18,7 +18,6 @@ const horses = [
 
 const RACE_COOLDOWN = 5000; // 2 seconds cooldown
 const EXPERIENCE_GAIN_WIN = 100; // Experience gained for winning
-const EXPERIENCE_GAIN_LOSS = 50; // Experience gained for losing
 
 module.exports = {
   data: new SlashCommandBuilder()
