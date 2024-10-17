@@ -94,16 +94,19 @@ module.exports = {
 */
     const currentTime = Date.now();
 
-    // Check if the player is still in cooldown
-    if (currentTime < player.lastRace + RACE_COOLDOWN) {
+    // Check if the user is already in a roulette game
+    if (
+      cooldowns[interaction.user.id] &&
+      currentTime < cooldowns[interaction.user.id]
+    ) {
       const remainingTime = Math.ceil(
-        (player.lastRace + RACE_COOLDOWN - currentTime) / 1000
+        (cooldowns[interaction.user.id] - currentTime) / 1000
       );
       return interaction.reply({
         embeds: [
           {
             title: "Cooldown Active",
-            description: `You need to wait ${remainingTime} seconds before racing again.`,
+            description: `You need to wait ${remainingTime} seconds before playing roulette again.`,
             color: 0xff0000,
           },
         ],
@@ -212,11 +215,11 @@ module.exports = {
         });
       }
 
-      // Update last race time
-      player.lastRace = Date.now();
-
       // Save the updated player data
       await player.save();
+      
+      // Update last race time
+      player.lastRace = Date.now();
       cooldowns[interaction.user.id] = Date.now() + RACE_COOLDOWN;
       
       // Edit the original reply to show the result
