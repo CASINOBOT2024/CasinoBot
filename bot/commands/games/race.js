@@ -217,7 +217,7 @@ module.exports = {
 
       // Save the updated player data
       await player.save();
-      cooldowns[interaction.user.id] = Date.now() + CRASH_COOLDOWN;
+      cooldowns[interaction.user.id] = Date.now() + RACE_COOLDOWN;
       
       // Edit the original reply to show the result
       await interaction.editReply({ embeds: [resultEmbed] });
