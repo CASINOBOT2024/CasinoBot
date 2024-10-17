@@ -2,7 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const Player = require("../../../mongoDB/Player");
 
 const cooldowns = {};
-const SLOT_COOLDOWN = 5000;
+const SLOT_COOLDOWN = 2000;
 
 module.exports = {
   data: new SlashCommandBuilder()
