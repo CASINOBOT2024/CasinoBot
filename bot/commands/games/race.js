@@ -67,12 +67,12 @@ module.exports = {
       });
       await player.save();
     }
-
+    /*
     if(player.balance <= 10000000 && betAmount > 30000) {
       return interaction.reply({
         embeds: [
           {
-            title: "Cooldown Active",
+            title: "Error - Max Bet",
             description: `The max bet is **30.000 🪙**. Please enter a lower bet and try again.`,
             color: 0xff0000,
           },
@@ -83,7 +83,7 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Cooldown Active",
+            title: "Error - Max Bet",
             description: `The max bet is **50.000 🪙**. Please enter a lower bet and try again.`,
             color: 0xff0000,
           },
@@ -91,7 +91,7 @@ module.exports = {
         ephemeral: true,
       });
     }
-
+*/
     const currentTime = Date.now();
 
     // Check if the player is still in cooldown
