@@ -40,7 +40,7 @@ module.exports = {
           mobile: 0,
         },
         lastDaily: 0,
-        lastRoulette: 0,
+        lastCrash: 0,
       });
       await playerData.save();
     }
