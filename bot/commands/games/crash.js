@@ -8,6 +8,7 @@ const {
 const Player = require("../../../mongoDB/Player");
 
 const cooldowns = {};
+const CRASH_COOLDOWN = 8000;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -176,8 +177,10 @@ module.exports = {
 
       // Player wins
       playerData.balance += betAmount * multiplier; // Calculate total cash after cashing out
+      player.lastCrash = Date.now();
       await playerData.save();
       
+      cooldowns[interaction.user.id] = Date.now() + CRASH_COOLDOWN;
       const won = betAmount * multiplier;
       // Send winning message
       await buttonInteraction.update({
