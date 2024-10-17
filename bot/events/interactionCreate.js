@@ -22,6 +22,7 @@ module.exports = {
           ephemeral: true,
         });
       } else {
+        console.log(error);
         await interaction.reply({
           content: "There was an error executing this command!",
           ephemeral: true,
