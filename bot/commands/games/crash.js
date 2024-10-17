@@ -45,7 +45,7 @@ module.exports = {
       await playerData.save();
     }
     /*
-    if(player.balance <= 10000000 && betAmount > 30000) {
+    if(playerData.balance <= 10000000 && betAmount > 30000) {
       return interaction.reply({
         embeds: [
           {
@@ -56,7 +56,7 @@ module.exports = {
         ],
         ephemeral: true,
       });
-    } else if(player.balance > 10000000 && betAmount > 50000) {
+    } else if(playerData.balance > 10000000 && betAmount > 50000) {
       return interaction.reply({
         embeds: [
           {
@@ -178,7 +178,7 @@ module.exports = {
       // Player wins
       playerData.balance += betAmount * multiplier; // Calculate total cash after cashing out
       await playerData.save();
-      player.lastCrash = Date.now();
+      playerData.lastCrash = Date.now();
       
       cooldowns[interaction.user.id] = Date.now() + CRASH_COOLDOWN;
       const won = betAmount * multiplier;
