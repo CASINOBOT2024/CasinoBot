@@ -137,7 +137,9 @@ module.exports = {
     };
 
     await interaction.reply({ embeds: [raceEmbed] });
-
+    // Update last race time
+    playerData.lastRace = Date.now();
+    cooldowns[interaction.user.id] = Date.now() + RACE_COOLDOWN;
     // Simulate race outcome after 1.5 seconds
     setTimeout(async () => {
       const winningHorseIndex = Math.floor(Math.random() * horses.length);
@@ -217,10 +219,7 @@ module.exports = {
 
       // Save the updated player data
       await playerData.save();
-      
-      // Update last race time
-      playerData.lastRace = Date.now();
-      cooldowns[interaction.user.id] = Date.now() + RACE_COOLDOWN;
+
       
       // Edit the original reply to show the result
       await interaction.editReply({ embeds: [resultEmbed] });
