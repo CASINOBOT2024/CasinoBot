@@ -37,7 +37,7 @@ module.exports = {
       await playerData.save();
     }
 /*
-    if(player.balance <= 10000000 && betAmount > 30000) {
+    if(playerData.balance <= 10000000 && betAmount > 30000) {
       return interaction.reply({
         embeds: [
           {
@@ -48,7 +48,7 @@ module.exports = {
         ],
         ephemeral: true,
       });
-    } else if(player.balance > 10000000 && betAmount > 50000) {
+    } else if(playerData.balance > 10000000 && betAmount > 50000) {
       return interaction.reply({
         embeds: [
           {
@@ -123,7 +123,7 @@ module.exports = {
 
     // Update player data in the database
     await playerData.save();
-    player.lastSlot = Date.now();
+    playerData.lastSlot = Date.now();
     cooldowns[interaction.user.id] = Date.now() + SLOT_COOLDOWN;
     // Update embed with results
     const resultMessage = winnings > 0 
@@ -147,18 +147,18 @@ function calculateWinnings(results, betAmount) {
 
   // Check for diamonds
   if (symbolCount['💎'] === 3) {
-    return betAmount * 7; // 3 diamonds win 50x the bet
+    return betAmount * 20; // 3 diamonds win 50x the bet
   } else if (symbolCount['💎'] === 2) {
-    return betAmount * 5; // 2 diamonds win 5x the bet
+    return betAmount * 15; // 2 diamonds win 5x the bet
   } else if (symbolCount['💎'] === 1) {
-    return betAmount * 3; // 1 diamond wins 1.5x the bet
+    return betAmount * 10; // 1 diamond wins 1.5x the bet
   }
 
   // Check for other winning combinations
   if (symbolCount[results[0]] === 3) {
-    return betAmount * 1; // Example: 3 of a kind wins 10x the bet
+    return betAmount * 5; // Example: 3 of a kind wins 10x the bet
   } else if (symbolCount[results[0]] === 2) {
-    return betAmount * 1; // Example: 2 of a kind wins 2x the bet
+    return betAmount * 3; // Example: 2 of a kind wins 2x the bet
   }
 
   return 0; // No winnings
