@@ -217,7 +217,8 @@ module.exports = {
 
       // Save the updated player data
       await player.save();
-
+      cooldowns[interaction.user.id] = Date.now() + CRASH_COOLDOWN;
+      
       // Edit the original reply to show the result
       await interaction.editReply({ embeds: [resultEmbed] });
     }, 1500); // 1500 milliseconds = 1.5 seconds
