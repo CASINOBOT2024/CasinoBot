@@ -64,7 +64,7 @@ const Events = require("./initMain/handlerEvents.js");
 const SlashCommands = require("./initMain/handlerSlashCommands.js");
 
 async function main(client) {
-  await Errors();
+  //await Errors();
   await client.login(process.env.BOT_TOKEN);
   await KeepAlive();
   await MongoDB();
