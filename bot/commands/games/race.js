@@ -48,10 +48,10 @@ module.exports = {
     
     const betAmount = interaction.options.getInteger("bet");
     
-    let player = await Player.findOne({ userId: interaction.user.id });
-    if (!player) {
+    let playerData = await Player.findOne({ userId: interaction.user.id });
+    if (!playerData) {
       // If the player doesn't exist, create a new one
-      player = new Player({
+      playerData = new Player({
         userId: interaction.user.id,
         balance: 0,
         level: 1,
@@ -65,10 +65,10 @@ module.exports = {
         lastRoulette: 0,
         lastRace: 0, // Add lastRace property
       });
-      await player.save();
+      await playerData.save();
     }
     /*
-    if(player.balance <= 10000000 && betAmount > 30000) {
+    if(playerData.balance <= 10000000 && betAmount > 30000) {
       return interaction.reply({
         embeds: [
           {
@@ -79,7 +79,7 @@ module.exports = {
         ],
         ephemeral: true,
       });
-    } else if(player.balance > 10000000 && betAmount > 50000) {
+    } else if(playerData.balance > 10000000 && betAmount > 50000) {
       return interaction.reply({
         embeds: [
           {
@@ -116,7 +116,7 @@ module.exports = {
     
     const chosenHorseIndex = parseInt(interaction.options.getString("horse"));
 
-    if (betAmount > player.balance) {
+    if (betAmount > playerData.balance) {
       return interaction.reply({
         embeds: [
           {
@@ -182,7 +182,7 @@ module.exports = {
 
       if (isWin) {
         const winnings = betAmount * 3; // 3x payout
-        player.balance += winnings; // Add winnings to balance
+        playerData.balance += winnings; // Add winnings to balance
         resultEmbed.fields.push({
           name: "Congratulations!",
           value: `You won ${winnings.toLocaleString()} 🪙!`,
@@ -190,19 +190,19 @@ module.exports = {
         });
         resultEmbed.fields.push({
           name: "Your cash:",
-          value: `${player.balance.toLocaleString()} 🪙`,
+          value: `${playerData.balance.toLocaleString()} 🪙`,
           inline: false,
         });
 
         // Gain experience for winning
-        player.experience += EXPERIENCE_GAIN_WIN; // Add experience for winning
+        playerData.experience += EXPERIENCE_GAIN_WIN; // Add experience for winning
         resultEmbed.fields.push({
           name: "XP Gained:",
           value: `${EXPERIENCE_GAIN_WIN} XP`,
           inline: false,
         });
       } else {
-        player.balance -= betAmount; // Lose the bet
+        playerData.balance -= betAmount; // Lose the bet
         resultEmbed.fields.push({
           name: "Sorry!",
           value: `You lost ${betAmount.toLocaleString()} 🪙`,
@@ -210,16 +210,16 @@ module.exports = {
         });
         resultEmbed.fields.push({
           name: "Your cash:",
-          value: `${player.balance.toLocaleString()} 🪙`,
+          value: `${playerData.balance.toLocaleString()} 🪙`,
           inline: false,
         });
       }
 
       // Save the updated player data
-      await player.save();
+      await playerData.save();
       
       // Update last race time
-      player.lastRace = Date.now();
+      playerData.lastRace = Date.now();
       cooldowns[interaction.user.id] = Date.now() + RACE_COOLDOWN;
       
       // Edit the original reply to show the result
