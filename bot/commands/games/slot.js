@@ -2,6 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const Player = require("../../../mongoDB/Player");
 
 const cooldowns = {};
+const SLOT_COOLDOWN = 5000;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -31,7 +32,7 @@ module.exports = {
           mobile: 0,
         },
         lastDaily: 0,
-        lastRoulette: 0,
+        lastSlot: 0,
       });
       await playerData.save();
     }
@@ -97,8 +98,10 @@ module.exports = {
 
     // Deduct the bet from the player's balance
     playerData.balance -= betAmount;
+    player.lastSlot = Date.now();
     await playerData.save();
-
+    cooldowns[interaction.user.id] = Date.now() + SLOT_COOLDOWN;
+    
     // Slot machine symbols
     const symbols = ['🍒', '🍋', '🍊', '🍉', '🔔', '⭐', '💎']; // Extend this array for more symbols
 
