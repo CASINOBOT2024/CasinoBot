@@ -33,10 +33,10 @@ module.exports = {
     const betAmount = interaction.options.getInteger("bet");
     const prediction = interaction.options.getString("prediction");
     
-    let player = await Player.findOne({ userId: interaction.user.id });
-    if (!player) {
+    let playerData = await Player.findOne({ userId: interaction.user.id });
+    if (!playerData) {
       // If the player doesn't exist, create a new one
-      player = new Player({
+      playerData = new Player({
         userId: interaction.user.id,
         balance: 0,
         level: 1,
@@ -49,10 +49,10 @@ module.exports = {
         lastDaily: 0,
         lastRoulette: 0,
       });
-      await player.save();
+      await playerData.save();
     }
 /*
-    if(player.balance <= 10000000 && betAmount > 30000) {
+    if(playerData.balance <= 10000000 && betAmount > 30000) {
       return interaction.reply({
         embeds: [
           {
@@ -63,7 +63,7 @@ module.exports = {
         ],
         ephemeral: true,
       });
-    } else if(player.balance > 10000000 && betAmount > 50000) {
+    } else if(playerData.balance > 10000000 && betAmount > 50000) {
       return interaction.reply({
         embeds: [
           {
@@ -98,7 +98,7 @@ module.exports = {
       });
     }
 
-    if (betAmount > player.balance) {
+    if (betAmount > playerData.balance) {
       return interaction.reply({
         embeds: [
           {
@@ -162,12 +162,12 @@ module.exports = {
       };
 
       let experienceGained = 0; // Initialize experience gain variable
-      let highestLevelGained = player.level; // Track the highest level gained in this session
+      let highestLevelGained = playerData.level; // Track the highest level gained in this session
 
       if (isWin) {
         // Calculate winnings
         let winnings = prediction === "green" ? betAmount * 3 : betAmount * 1;
-        player.balance += winnings; // Add winnings to balance
+        playerData.balance += winnings; // Add winnings to balance
         messageEmbed.fields.push({
           name: "You won:",
           value: `${winnings.toLocaleString()} 💰`,
@@ -175,20 +175,20 @@ module.exports = {
         });
         messageEmbed.fields.push({
           name: "Your cash:",
-          value: `${player.balance.toLocaleString()} 💰`,
+          value: `${playerData.balance.toLocaleString()} 💰`,
           inline: false,
         });
 
         // Add experience for winning (reduced to half)
         experienceGained = Math.floor(winnings / 200); // Reduced: 0.5 XP for every 100 currency won
-        player.experience += experienceGained;
+        playerData.experience += experienceGained;
         
         // Level up logic
-        const xpNeeded = player.level * 100; // Example: 100 XP needed for level 1, 200 for level 2, etc.
-        while (player.experience >= xpNeeded) {
-          player.level += 1; // Level up
-          player.experience -= xpNeeded; // Reduce experience by the required amount
-          highestLevelGained = player.level; // Update highest level gained
+        const xpNeeded = playerData.level * 100; // Example: 100 XP needed for level 1, 200 for level 2, etc.
+        while (playerData.experience >= xpNeeded) {
+          playerData.level += 1; // Level up
+          playerData.experience -= xpNeeded; // Reduce experience by the required amount
+          highestLevelGained = playerData.level; // Update highest level gained
         }
 
         // Check for balloon or mobile win (10% chance), but only one reward
@@ -196,14 +196,14 @@ module.exports = {
         const winMobile = Math.random() < 0.1; // 10% chance for mobile
 
         if (winBalloon && !winMobile) {
-          player.swag.balloons += 1; // Add a balloon
+          playerData.swag.balloons += 1; // Add a balloon
           messageEmbed.fields.push({
             name: "Congratulations!",
             value: "You also won a 🎈 balloon!",
             inline: false,
           });
         } else if (winMobile && !winBalloon) {
-          player.swag.mobile += 1; // Add a mobile
+          playerData.swag.mobile += 1; // Add a mobile
           messageEmbed.fields.push({
             name: "Congratulations!",
             value: "You also won a 📱 mobile!",
@@ -211,7 +211,7 @@ module.exports = {
           });
         }
       } else {
-        player.balance -= betAmount;
+        playerData.balance -= betAmount;
         messageEmbed.fields.push({
           name: "Lost:",
           value: `${betAmount.toLocaleString()} 💰`,
@@ -219,16 +219,16 @@ module.exports = {
         });
         messageEmbed.fields.push({
           name: "Your cash:",
-          value: `${player.balance.toLocaleString()} 💰`,
+          value: `${playerData.balance.toLocaleString()} 💰`,
           inline: false,
         });
       }
 
       // Save the updated player data
-      await player.save();
+      await playerData.save();
 
       // Update last roulette time for the user
-      player.lastRoulette = Date.now();
+      playerData.lastRoulette = Date.now();
       cooldowns[interaction.user.id] = Date.now() + ROULETTE_COOLDOWN; // Set cooldown for this user
 
       // Edit the original reply to show the result
