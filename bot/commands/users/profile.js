@@ -35,8 +35,8 @@ module.exports = {
     }
 
     // Calculate experience needed for the next level
-    const xpNeeded = player.level * 100; // Example: 100 XP needed for level 1, 200 for level 2, etc.
-    const progressBarLength = 12; // Length of the progress bar
+    const xpNeeded = player.level * 300; // Example: 100 XP needed for level 1, 200 for level 2, etc.
+    const progressBarLength = 10; // Length of the progress bar
     const filledLength = Math.floor(
       (player.experience / xpNeeded) * progressBarLength
     );
