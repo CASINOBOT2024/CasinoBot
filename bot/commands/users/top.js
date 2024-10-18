@@ -40,7 +40,7 @@ module.exports = {
     // Build the top 10 message
     let topMessage = topPlayers.map((player, index) => {
       const user = client.users.cache.get(player.userId);
-      return `**#${index + 1}** - ${user ? `<@${user.id}>` : 'Unknown Player'}: ${
+      return `**#${index + 1}** - ${user ? `${user.username} (${user.id})` : 'Unknown Player'}: ${
         category === 'balance' ? `**${player.balance.toLocaleString()}** 💰` : `Level ${player.level}`
       }`;
     }).join('\n\n');
