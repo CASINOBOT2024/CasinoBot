@@ -115,7 +115,7 @@ module.exports = {
     await playerData.save();
     
     // Slot machine symbols
-    const symbols = ['🍒', '🍋', '🍊', '🍉', '🔔', '⭐', '💎']; // Extend this array for more symbols
+    const symbols = ['🍐','🍎','🍓','🥈','🥉','🥇','💰','💣','⚜️','🎈','🍒', '🍋', '🍊', '🍉', '🔔', '⭐', '💎']; // Extend this array for more symbols
 
     // Spin the slot machine
     const spinResults = [
