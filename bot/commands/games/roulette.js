@@ -76,6 +76,20 @@ module.exports = {
       });
     }
 */
+
+    if(betAmount > 50000) {
+      return interaction.reply({
+        embeds: [
+          {
+            title: "Error - Max Bet",
+            description: `The max bet is **50.000 🪙**. Please enter a lower bet and try again.`,
+            color: 0xff0000,
+          },
+        ],
+        ephemeral: true,
+      });
+    }
+    
     const currentTime = Date.now();
 
     // Check if the user is already in a roulette game
