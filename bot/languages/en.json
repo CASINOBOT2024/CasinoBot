@@ -10,10 +10,20 @@
   "amountErrorNegativeNumberContent": "The amount must be a positive number.",
   "userNotHaveMoney": "The user does not have enough balance to remove that amount.",
   "moneyRemovedTitle": "Money Removed",
-  "succesfulRemoveMoney": "${amount} 💰 has been successfully removed from ${user}'s balance.",
+  "succesfulRemoveMoney": "${amount} 💰 has been successfully removed from {user}'s balance.",
   "cooldownActiveTitle": "Your are on Cooldown!",
   "cooldownTimeContent": "You need to wait **{hours}h {minutes}m {seconds}s** before collecting your daily reward again.",
   "dailyRewardTitle": "Daily Reward Collected!",
-  "dailyRewardContent" "You have collected **{amount} 💰** coins!"
-  
+  "dailyRewardContent" "You have collected **{amount} 💰** coins!",
+  "nothingToSellTitle": "Error",
+  "nothingToSellContent": "You do not have any items to sell.",
+  "errorBalloonSellTitle": "Error",
+  "errorBalloonSellContent": "You do not have enough balloons. You only have {balloon}.",
+  "errorMobileSellTitle": "Error",
+  "errorMobileSellContent": "You do not have enough mobiles. You only have {mobile}."
+  "succesfulSellTitle": "Sale Successful!",
+  "succesfulSellContent": "You sold {quantity} {item}{plural} for {amount} 💰.",
+  "succesfulSellFiledTitle": "New Balance",
+  "balloonTitle": "Balloons",
+  "mobileTitle": "Mobiles"
 }
