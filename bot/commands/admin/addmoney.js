@@ -31,7 +31,7 @@ module.exports = {
       });
     }
     
-    await guild.save();
+    await guildLang.save();
 
     const lang = require(`../../languages/${guildLang}.json`);
     // Check if the user executing the command is the authorized user
