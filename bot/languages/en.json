@@ -10,5 +10,10 @@
   "amountErrorNegativeNumberContent": "The amount must be a positive number.",
   "userNotHaveMoney": "The user does not have enough balance to remove that amount.",
   "moneyRemovedTitle": "Money Removed",
-  "succesfulRemoveMoney": "${amount} 💰 has been successfully removed from ${user}'s balance."
+  "succesfulRemoveMoney": "${amount} 💰 has been successfully removed from ${user}'s balance.",
+  "cooldownActiveTitle": "Your are on Cooldown!",
+  "cooldownTimeContent": "You need to wait **{hours}h {minutes}m {seconds}s** before collecting your daily reward again.",
+  "dailyRewardTitle": "Daily Reward Collected!",
+  "dailyRewardContent" "You have collected **{amount} 💰** coins!"
+  
 }
