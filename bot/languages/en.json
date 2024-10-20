@@ -1,5 +1,5 @@
 {
   "onlyCreatorBot": "Only the Bot Creator has permission to do this command",
   "succesfullAddMoneyTitle": "Money Added!",
-  "succesfullAddMoneyContent": `${amount.toLocaleString()} 💰 has been added to ${user.username}'s balance.`,
+  "succesfullAddMoneyContent": "${amount.toLocaleString()} 💰 has been added to ${user.username}'s balance.",
 }
