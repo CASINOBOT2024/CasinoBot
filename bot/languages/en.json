@@ -14,7 +14,7 @@
   "cooldownActiveTitle": "Your are on Cooldown!",
   "cooldownTimeContent": "You need to wait **{hours}h {minutes}m {seconds}s** before collecting your daily reward again.",
   "dailyRewardTitle": "Daily Reward Collected!",
-  "dailyRewardContent" "You have collected **{amount} 💰** coins!",
+  "dailyRewardContent": "You have collected **{amount} 💰** coins!",
   "nothingToSellTitle": "Error",
   "nothingToSellContent": "You do not have any items to sell.",
   "errorBalloonSellTitle": "Error",
