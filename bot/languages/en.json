@@ -1,5 +1,14 @@
 {
   "onlyCreatorBot": "Only the Bot Creator has permission to do this command",
   "succesfulAddMoneyTitle": "Money Added!",
-  "succesfulAddMoneyContent": "{amount} 💰 has been added to {user}'s balance."
+  "succesfulAddMoneyContent": "{amount} 💰 has been added to {user}'s balance.",
+  "userNotFoundOnDataBaseTitle":  "Error",
+  "userNotFoundOnDataBaseContent":  "User <@{user}> not found in the database.",
+  "succesfulDeletedUserTitle": "Success",
+  "succesfulDeletedUserContent": "User <@{user}> has been successfully deleted from the database.",
+  "amountErrorNumberTitle": "Error",
+  "amountErrorNegativeNumberContent": "The amount must be a positive number.",
+  "userNotHaveMoney": "The user does not have enough balance to remove that amount.",
+  "moneyRemovedTitle": "Money Removed",
+  "succesfulRemoveMoney": "${amount} 💰 has been successfully removed from ${user}'s balance."
 }
