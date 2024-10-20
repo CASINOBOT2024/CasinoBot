@@ -27,13 +27,24 @@ module.exports = {
     const item = interaction.options.getString("item");
     const quantity = interaction.options.getInteger("quantity");
 
+    let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guildLang.save();
+    
+
     let player = await Player.findOne({ userId: interaction.user.id });
     if (!player) {
       return interaction.reply({
         embeds: [
           {
-            title: "Error",
-            description: "You do not have any items to sell.",
+            title: lang.nothingToSellTitle,
+            description: lang.nothingToSellContent,
             color: 0xff0000,
           },
         ],
@@ -51,8 +62,9 @@ module.exports = {
         return interaction.reply({
           embeds: [
             {
-              title: "Error",
-              description: `You do not have enough balloons. You only have ${player.swag.balloons}.`,
+              title: lang.errorBalloonSellTitle,
+              description: lang.errorBalloonSellContent
+                               .replace("{balloon}", player.swag.balloons),
               color: 0xff0000,
             },
           ],
@@ -67,8 +79,9 @@ module.exports = {
         return interaction.reply({
           embeds: [
             {
-              title: "Error",
-              description: `You do not have enough mobiles. You only have ${player.swag.mobile}.`,
+              title: lang.errorMobileSellTitle,
+              description: lang.errorMobileSellContent
+                               .replace("{mobile}", player.swag.mobile),
               color: 0xff0000,
             },
           ],
@@ -83,23 +96,25 @@ module.exports = {
     return interaction.reply({
       embeds: [
         {
-          title: "Sale Successful!",
-          description: `You sold ${quantity.toLocaleString()} ${
-            item === "balloon" ? "balloon" : "mobile"
-          }${quantity > 1 ? "s" : ""} for ${amountGained.toLocaleString()} 💰.`,
+          title: lang.succesfulSellTitle,
+          description: lang.succesfulSellContent
+                           .replace("{quantity}",quantity)
+                           .replace("{item}", item === "balloon" ? "balloon" : "mobile")
+                           .replace("{plural}", quantity > 1 ? "s" : "")
+                           .replace("{amount", amountGained.toLocaleString()),
           fields: [
             {
-              name: "New Balance",
+              name: lang.succesfulSellFiledTitle,
               value: `${player.balance.toLocaleString()} 💰`,
               inline: false,
             },
             {
-              name: "Balloons",
+              name: lang.balloonTitle,
               value: `${player.swag.balloons.toLocaleString()} 🎈`,
               inline: false,
             },
             {
-              name: "Mobiles",
+              name: lang.mobileTitle,
               value: `${player.swag.mobile.toLocaleString()} 📱`,
               inline: false,
             },
