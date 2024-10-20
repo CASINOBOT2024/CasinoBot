@@ -20,7 +20,7 @@
   "errorBalloonSellTitle": "Error",
   "errorBalloonSellContent": "You do not have enough balloons. You only have {balloon}.",
   "errorMobileSellTitle": "Error",
-  "errorMobileSellContent": "You do not have enough mobiles. You only have {mobile}."
+  "errorMobileSellContent": "You do not have enough mobiles. You only have {mobile}.",
   "succesfulSellTitle": "Sale Successful!",
   "succesfulSellContent": "You sold {quantity} {item}{plural} for {amount} 💰.",
   "succesfulSellFiledTitle": "New Balance",
