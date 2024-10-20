@@ -75,7 +75,7 @@ module.exports = {
       embeds: [
         {
           title: lang.succesfulAddMoneyTitle,
-          description: lang.successfulAddMoneyContent
+          description: lang.succesfulAddMoneyContent
                            .replace('{amount}', amount.toLocaleString())
                            .replace('{user}', user.username),
           color: 0x00ff00,
