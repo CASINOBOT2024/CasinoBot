@@ -18,19 +18,25 @@ module.exports = {
         .setRequired(true)
     ),
   category: "admin",
-  usage: "Remove money from a user's balance (admin only)",
+  usage: "Remove money from a user's balance (creator bot only)",
   async execute(interaction) {
+    let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guildLang.save();
+
+    const lang = require(`../../languages/${guildLang.lang}.json`);
+    
     // Check if the user executing the command is the authorized user
     if (interaction.user.id !== "714376484139040809") {
       return interaction.reply({
-        embeds: [
-          {
-            title: "Unauthorized",
-            description: "You do not have permission to use this command.",
-            color: 0xff0000,
-          },
-        ],
-        ephemeral: true, // Only the user who executed the command sees this message
+        content: lang.onlyCreatorBot,
+        ephemeral: true,
       });
     }
 
@@ -43,8 +49,9 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Error",
-            description: "The specified user does not have an account.",
+            title: lang.userNotFoundOnDataBaseTitle,
+            description: lang.userNotFoundOnDataBaseContent
+                             .replace("{user}", targetPlayer.id),
             color: 0xff0000,
           },
         ],
@@ -57,8 +64,8 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Error",
-            description: "The amount must be a positive number.",
+            title: lang.amountErrorNumberTitle,
+            description: lang.amountErrorNegativeNumberContent,
             color: 0xff0000,
           },
         ],
@@ -71,9 +78,8 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Error",
-            description:
-              "The user does not have enough balance to remove that amount.",
+            title: lang.amountErrorNumberTitle,
+            description: lang.userNotHaveMoney,
             color: 0xff0000,
           },
         ],
@@ -88,8 +94,10 @@ module.exports = {
     return interaction.reply({
       embeds: [
         {
-          title: "Money Removed",
-          description: `${amount.toLocaleString()} 💰 has been successfully removed from ${targetUser.username}'s balance.`,
+          title: lang.moneyRemovedTitle,
+          description: lang.moneyRemovedTitle
+                           .replace("{amount}", amount.toLocaleString())
+                           .replace("{user}", targetUser.username),
           color: 0x00ff00,
         },
       ],
