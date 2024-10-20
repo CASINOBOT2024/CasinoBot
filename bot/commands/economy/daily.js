@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const Player = require("../../../mongoDB/Player");
+const Guild = require("../../../mongoDB/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -10,6 +11,16 @@ module.exports = {
   async execute(interaction, client) {
     const rewardAmount = 10000;
 
+    let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guildLang.save();
+    
     let player = await Player.findOne({ userId: interaction.user.id });
     if (!player) {
       // If the player doesn't exist, create a new one
@@ -41,8 +52,11 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Cooldown",
-            description: `You need to wait **${hours}h ${minutes}m ${seconds}s** before collecting your daily reward again.`,
+            title: lang.cooldownActiveTitle,
+            description: lang.cooldownTimeContent
+                             .replace("{hours}", hours)
+                             .replace("{minutes}", minutes)
+                             .replace("{seconds}", seconds),
             color: 0xff0000,
           },
         ],
@@ -59,8 +73,9 @@ module.exports = {
     return interaction.reply({
       embeds: [
         {
-          title: "Daily Reward Collected!",
-          description: `You have collected **${rewardAmount.toLocaleString()} 💰** coins!`,
+          title: lang.dailyRewardTitle,
+          description: lang.dailyRewardContent
+                           .replace("{amuont}", rewardAmount.toLocaleString()),
           color: 0x00ff00,
         },
       ],
