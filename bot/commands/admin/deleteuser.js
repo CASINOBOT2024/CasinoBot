@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Player = require("../../../mongoDB/Player");
+const Guild = require("../../../mongoDB/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -11,17 +12,25 @@ module.exports = {
         .setRequired(true)
     ),
   category: 'admin',
-  usage: 'Delete a user from the database (admin only)',
+  usage: 'Delete a user from the database (creator bot only)',
   async execute(interaction, client) {
+
+    let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guildLang.save();
+
+    const lang = require(`../../languages/${guildLang.lang}.json`);
     
     // Check if the user executing the command is the admin
-    if (interaction.user.id !== "714376484139040809") {
+   if (interaction.user.id !== "714376484139040809") {
       return interaction.reply({
-        embeds: [{
-          title: 'Permission Denied',
-          description: 'You do not have permission to use this command.',
-          color: 0xff0000,
-        }],
+        content: lang.onlyCreatorBot,
         ephemeral: true,
       });
     }
@@ -34,8 +43,9 @@ module.exports = {
     if (!player) {
       return interaction.reply({
         embeds: [{
-          title: 'Error',
-          description: `User <@${targetUser.id}> not found in the database.`,
+          title: lang.userNotFoundOnDataBaseTitle,
+          description: lang.userNotFoundOnDataBase
+                           .replace("{user}", targetUser.id),
           color: 0xff0000,
         }],
         ephemeral: true,
@@ -48,8 +58,9 @@ module.exports = {
     // Confirm the deletion
     return interaction.reply({
       embeds: [{
-        title: 'Success',
-        description: `User <@${targetUser.id}> has been successfully deleted from the database.`,
+        title: lang.succesfulDeletedUserTitle,
+        description: lang.succesfulDeletedUserContent
+                         .replace("{user}", targetUser.id),
         color: 0x00ff00,
       }],
     });
