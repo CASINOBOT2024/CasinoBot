@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require("discord.js");
 const Player = require("../../../mongoDB/Player");
+const Guild = require("../../../mongoDB/Guild");
+
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -18,12 +20,24 @@ module.exports = {
         .setRequired(true)
     ),
   category: "admin",
-  usage: "Add money to a user (admin only)",
+  usage: "Add money to a user (creator bot only)",
   async execute(interaction, client) {
+
+    let guildLang = await Guild.finOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guild.save();
+
+    const lang = require(`../../languages/${guildLang}.json`);
     // Check if the user executing the command is the authorized user
     if (interaction.user.id !== "714376484139040809") {
       return interaction.reply({
-        content: "You do not have permission to use this command.",
+        content: lang.onlyCreatorBot,
         ephemeral: true,
       });
     }
@@ -60,8 +74,8 @@ module.exports = {
     return interaction.reply({
       embeds: [
         {
-          title: "Money Added!",
-          description: `${amount.toLocaleString()} 💰 has been added to ${user.username}'s balance.`,
+          title: lang.succesfullAddMoneyTitle,
+          description: lang.succesfullAddMoneyContent,
           color: 0x00ff00,
         },
       ],
