@@ -33,7 +33,7 @@ module.exports = {
     
     await guildLang.save();
 
-    const lang = require(`../../languages/${guildLang}.json`);
+    const lang = require(`../../languages/${guildLang.lang}.json`);
     // Check if the user executing the command is the authorized user
     if (interaction.user.id !== "714376484139040809") {
       return interaction.reply({
