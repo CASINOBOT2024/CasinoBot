@@ -1,5 +1,5 @@
 {
   "onlyCreatorBot": "Only the Bot Creator has permission to do this command",
   "succesfulAddMoneyTitle": "Money Added!",
-  "succesfulAddMoneyContent": "{amount} 💰 has been added to {user}'s balance.",
+  "succesfulAddMoneyContent": "{amount} 💰 has been added to {user}'s balance."
 }
