@@ -74,7 +74,7 @@ module.exports = {
     return interaction.reply({
       embeds: [
         {
-          title: lang.succesfullAddMoneyTitle,
+          title: lang.succesfulAddMoneyTitle,
           description: lang.successfulAddMoneyContent
                            .replace('{amount}', amount.toLocaleString())
                            .replace('{user}', user.username),
