@@ -77,7 +77,7 @@ module.exports = {
           title: lang.succesfullAddMoneyTitle,
           description: lang.successfulAddMoneyContent
                            .replace('{amount}', amount.toLocaleString())
-                           .replace('{user}', user.username);,
+                           .replace('{user}', user.username),
           color: 0x00ff00,
         },
       ],
