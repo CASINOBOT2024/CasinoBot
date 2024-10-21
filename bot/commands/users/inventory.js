@@ -64,6 +64,6 @@ module.exports = {
       color: 0x00ff00,
     };
 
-    return interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed] });
   },
 };
