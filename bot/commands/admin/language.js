@@ -44,8 +44,7 @@ module.exports = {
       content: lang.succesfulChangeLanguage
                    .replace("{language}", selectLang == "es" ? "🇪🇸 Español" : "🇺🇸 English"),
       color: 0x00ff00,
-        },
     });
-    }
+    
   }
 }
