@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const Player = require("../../../mongoDB/Player");
+const Guild = require("../../../mongoDB/Guild");
 
 const cooldowns = {};
 const SLOT_COOLDOWN = 2000;
@@ -16,6 +17,16 @@ module.exports = {
   category: 'games',
   usage: "Play the slot machine with a bet!",
   async execute(interaction, client) {
+    let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guildLang.save();
+    
     const betAmount = interaction.options.getInteger('bet');
     
     const playerData = await Player.findOne({ userId: interaction.user.id });
@@ -66,8 +77,8 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Error - Max Bet",
-            description: `The max bet is **50.000 🪙**. Please enter a lower bet and try again.`,
+            title: lang.errorMaxBetTitle,
+            description: lang.errorMaxBetContent,
             color: 0xff0000,
           },
         ],
@@ -88,8 +99,9 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Cooldown Active",
-            description: `You need to wait ${remainingTime} seconds before playing roulette again.`,
+            title: lang.cooldownActiveTitle,
+            description: lang.cooldownActiveSecondsContent
+                             .replace("{seconds}", remainingTime),
             color: 0xff0000,
           },
         ],
@@ -101,8 +113,8 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Error",
-            description: "You do not have enough money to place this bet.",
+            title: lang.errorEnoughMoneyTitle,
+            description: lang.errorEnoughMoneyContent,
             color: 0xff0000,
           },
         ],
@@ -127,9 +139,11 @@ module.exports = {
     // Create an embed for the results
     const slotEmbed = new EmbedBuilder()
       .setColor(0x3498DB)
-      .setTitle('🎰 Slot Machine Spin!')
+      .setTitle(lang.slotSpinTitle)
       .setDescription(`${spinResults.join(' | ')}`)
-      .setFooter({ text: `You bet: ${betAmount.toLocaleString()} 🪙` });
+      .setFooter({ text: lang.yourBetWithCoin
+                             .replace("{amount}", betAmount.toLocaleString())
+                 });
 
     // Determine winnings
     const winnings = calculateWinnings(spinResults, betAmount);
@@ -159,10 +173,11 @@ module.exports = {
     cooldowns[interaction.user.id] = Date.now() + SLOT_COOLDOWN;
     // Update embed with results
     const resultMessage = winnings > 0 
-      ? `🎉 You win! You gained: **${winnings.toLocaleString()} 🪙**.`
-      : `😢 You lose! Better luck next time!`;
+      ? lang.slotSpinResultWin
+            .replace("{result}", winnings.toLocaleString())
+      : lang.slotSpinResultLost;
 
-    slotEmbed.addFields({ name: 'Result', value: resultMessage });
+    slotEmbed.addFields({ name: lang.resultSpin, value: resultMessage });
     
     // Reply with the embed
     await interaction.reply({ embeds: [slotEmbed] });
