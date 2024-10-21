@@ -72,7 +72,7 @@ module.exports = {
     await player.save();
 
     // Send a success message
-    return interaction.reply({
+    await interaction.reply({
       embeds: [
         {
           title: lang.dailyRewardTitle,
