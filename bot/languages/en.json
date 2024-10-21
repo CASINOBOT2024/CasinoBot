@@ -44,6 +44,7 @@
   "hoseWin": "Won!",
   "horseLost": "Lose!",
   "yourBet": "Your bet:",
+  "yourBetWithCoin": "You bet: {amount} 🪙",
   "yourRace": "Your Racer:",
   "yourCash": "Your cash:",
   "youLost": "Lost:",
@@ -67,5 +68,9 @@
   "rouletteColorGreen": "**🟩 GREEN**",
   "rouletteYouWon": "You Won!",
   "wonBalloon": "You also won a 🎈 balloon!",
-  "wonMobile": "You also won a 📱 mobile!"
+  "wonMobile": "You also won a 📱 mobile!",
+  "slotSpinTitle": "🎰 Slot Machine Spin!",
+  "slotSpinResultWin": "🎉 You win! You gained: **{result} 🪙**.",
+  "slotSpinResultLost": "😢 You lose! Better luck next time!",
+  "resultSpin": "Result"
 }
