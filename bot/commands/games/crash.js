@@ -109,7 +109,7 @@ module.exports = {
           {
             title: lang.cooldownActiveTitle,
             description: lang.cooldownActiveSecondsContent
-                             .replace("{seconds}", remainingTime)
+                             .replace("{seconds}", remainingTime),
             color: 0xff0000,
           },
         ],
