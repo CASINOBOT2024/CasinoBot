@@ -29,6 +29,7 @@ module.exports = {
         lang: "en",
       });
     }
+  const lang = require(`../../languages/${guildLang.lang}.json`);
 
     if(guildLang.lang == item) {
       return interaction.reply({
