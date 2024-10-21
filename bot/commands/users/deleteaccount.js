@@ -8,12 +8,24 @@ module.exports = {
   category: "users",
   usage: "Delete your account after confirmation",
   async execute(interaction, client) {
+    let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guildLang.save();
+
+    const lang = require(`../../languages/${guildLang.lang}.json`);
+    
     const userId = interaction.user.id;
 
     // Primera confirmación
     await interaction.reply({
       content:
-        "Are you sure you want to delete your account? Please type **confirm** to proceed.",
+        lang.deleteAccountStep1,
       ephemeral: true,
     });
 
@@ -30,7 +42,7 @@ module.exports = {
       // Segunda confirmación
       await interaction.followUp({
         content:
-          "You have confirmed. Please type **confirm** again to permanently delete your account.",
+          lang.deleteAccountStep2,
         ephemeral: true,
       });
 
@@ -47,7 +59,7 @@ module.exports = {
 
         await interaction.followUp({
           content:
-            "Your account has been successfully deleted. All data is permanently removed.",
+            lang.deletedAccountSuc,
           ephemeral: true,
         });
       });
@@ -55,7 +67,7 @@ module.exports = {
       secondCollector.on("end", (collected) => {
         if (collected.size === 0) {
           interaction.followUp({
-            content: "Confirmation timed out. Your account was not deleted.",
+            content: lang.deletedAccountTimeOut,
             ephemeral: true,
           });
         }
@@ -65,7 +77,7 @@ module.exports = {
     collector.on("end", (collected) => {
       if (collected.size === 0) {
         interaction.followUp({
-          content: "Confirmation timed out. Your account was not deleted.",
+          content: lang.deletedAccountTimeOut,
           ephemeral: true,
         });
       }
