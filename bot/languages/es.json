@@ -132,5 +132,89 @@
   "lose": "¡Has perdido! 😢",
   "finalContent": "Tu movimiento: {userChoice}\nMovimiento de IA: {botChoice}\n\n{result}\nYTu nuevo saldo: {balance} 🪙",
   "timeEnd": "¡Se acabó el tiempo! No hiciste ningún movimiento.",
-  "profileTitle": "Perfil de {user}"
+  "profileTitle": "Perfil de {user}",
+  "commands": {
+    "deleteuser": {
+      "name": "deleteuser",
+      "description": "Eliminar un usuario de la base de datos (solo para el creador del bot)"
+    }
+    "addmoney": {
+      "name": "addmoney",
+      "description": "Añadir dinero a un usuario (solo para el creador del bot)"
+    }
+    "language": {
+      "name": "language",
+      "description": "Cambiar el idioma del bot"
+    }
+    "removemoney": {
+      "name": "removemoney",
+      "description": "Quitar dinero del saldo de un usuario (solo para el creador del bot)"
+    }
+    "daily": {
+      "name": "daily",
+      "description": "Recoge tu recompensa diaria de 10.000 monedas"
+    }
+    "sell": {
+      "name": "sell",
+      "description": "Vende tus globos y móviles por monedas"
+    }
+    "crash": {
+      "name": "crash",
+      "description": "¡Juega a Crash con una apuesta!"
+    }
+    "race": {
+      "name": "race",
+      "description": "¡Apuesta a un caballo para ganar en grande!"
+    }
+    "roulette": {
+      "name": "roulette",
+      "description": "Juega a la ruleta adivinando el color"
+    }
+    "rps": {
+      "name": "rps",
+      "description": "¡Juega Piedra, Papel o Tijeras con una apuesta!"
+    }
+    "slot": {
+      "name": "slot",
+      "description": "¡Juega a la máquina tragamonedas con una apuesta!"
+    }
+    "buy": {
+      "name": "buy",
+      "description": "Compra objetos en la tienda"
+    }
+    "deleteaccount": {
+      "name": "deleteaccount",
+      "description": "Elimina permanentemente tu cuenta y todos los datos asociados"
+    }
+    "gift": {
+      "name": "gift",
+      "description": "Regala dinero a otro usuario"
+    }
+    "help": {
+      "name": "help",
+      "description": "Mostrar los comandos disponibles"
+    }
+    "inventory": {
+      "name": "inventory",
+      "description": "Ver tu inventario o el de otro usuario"
+    }
+    "profile": {
+      "name": "profile",
+      "description": "Ver el perfil de un usuario, incluyendo el saldo y estadísticas"
+    }
+    "top": {
+      "name": "top",
+      "description": "Mostrar los 10 mejores jugadores con más dinero o mayor nivel"
+    }
+  },
+  "categories": {
+    "users": "Usuarios",
+    "admin": "Admin",
+    "games": "Juegos",
+    "economy": "Economía"
+  },
+  "help_welcome": {
+    "title": "¡Bienvenido a la Sección de Ayuda!",
+    "description": "Aquí puedes encontrar todos los comandos disponibles. Elige una categoría a continuación para explorar.\n\n⚙️ = ADMIN\n💰 = ECONOMÍA\n🎮 = JUEGOS\n👤 = USUARIOS"
+  }
 }
