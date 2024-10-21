@@ -122,5 +122,14 @@
   "top10Content": "**#{topNumber}** - {user}: {category}",
   "topLevelContent": "Nivel {level}",
   "succesfulChangeLanguage": "El idioma se ha cambiado correctamente a {language}.",
-  "sameLang": "El idioma no puede ser el mismo que está ya establecido."
+  "sameLang": "El idioma no puede ser el mismo que está ya establecido.",
+  "rock": "🪨 Piedra",
+  "paper": "📄 Papel",
+  "scissors": "✂️ Tijera",
+  "chooseMove": "t¡Elige tu movimiento!",
+  "tie": "¡Empate! 🤝",
+  "win": "¡Has ganado! 🎉",
+  "lose": "¡Has perdido! 😢",
+  "finalContent": "Tu movimiento: {userChoice}\nMovimiento de IA: {botChoice}\n\n{result}\nYTu nuevo saldo: {balance} 🪙",
+  "timeEnd": "¡Se acabó el tiempo! No hiciste ningún movimiento."
 }
