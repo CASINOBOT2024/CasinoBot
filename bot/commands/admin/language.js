@@ -9,7 +9,7 @@ module.exports = {
       option
         .setName("lang")
         .setDescription("Choose the language")
-        .setRequired(false) // Make this option not required
+        .setRequired(true) // Make this option required
         .addChoices(
           { name: '🇪🇸 Spanish', value: 'es' },
           { name: '🇺🇸 English', value: 'en' },
