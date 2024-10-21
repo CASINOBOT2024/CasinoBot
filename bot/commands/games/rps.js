@@ -107,6 +107,7 @@ module.exports = {
     // Send the initial message with options
     await interaction.reply({
       content: lang.chooseMove,
+      ephemeral: true,
       components: [row],
     });
 
@@ -146,6 +147,7 @@ module.exports = {
                      .replace("{botChoice}", botChoice)
                      .replace("{result}", result)
                      .replace("{balance}", playerData.balance),
+        ephemeral: true,
         components: [], // Disable buttons after interaction
       });
 
@@ -156,6 +158,7 @@ module.exports = {
       if (collected.size === 0) {
         await message.edit({
           content: lang.timeEnd,
+          ephemeral: true,
           components: [],
         });
       }
