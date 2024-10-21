@@ -42,7 +42,7 @@ module.exports = {
     await guildLang.save();
     
     lang = require(`../../languages/${guildLang.lang}.json`);
-    return interaction.reply({
+    await interaction.reply({
       content: lang.succesfulChangeLanguage
                    .replace("{language}", selectLang == "es" ? "🇪🇸 Español" : "🇺🇸 English"),
       color: 0x00ff00,
