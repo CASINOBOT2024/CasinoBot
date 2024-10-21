@@ -36,8 +36,6 @@ module.exports = {
         content: lang.sameLang
       })
     }
-    
-    await guildLang.save();
 
     await guildLang.lang = selectLang;
 
