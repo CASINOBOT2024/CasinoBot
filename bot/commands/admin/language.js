@@ -38,7 +38,7 @@ module.exports = {
     
     await guildLang.save();
 
-    await guildLand.lang = selectLang;
+    await guildLang.lang = selectLang;
 
     await guildLang.save();
     return interaction.reply({
