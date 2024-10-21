@@ -58,7 +58,7 @@ module.exports = {
 
     // Create an embed message for the profile
     const profileEmbed = {
-      title: `${userToCheck.username}'s Profile`,
+      title: lang.profileTitle.replace("{user}", userToCheck.username),
       fields: [
         { name: lang.cash, value: `${player.balance.toLocaleString()} 💰`, inline: false },
         { name: lang.level, value: `${player.level.toLocaleString()}`, inline: false },
