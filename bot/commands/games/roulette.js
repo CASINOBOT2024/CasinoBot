@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js"); 
 const Player = require("../../../mongoDB/Player");
-const Guild = require"../../../mongoDB/Guild");
+const Guild = require("../../../mongoDB/Guild");
 
 const ROULETTE_COOLDOWN = 5000; // 5 seconds cooldown
 
