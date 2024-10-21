@@ -88,7 +88,7 @@
   "giftSenderNotHaveMoneyTitle": "Error",
   "giftSenderNotHaveMoneyContent": "You do not have enough money to gift this amount.",
   "giftSucTitle": "Gift Successful",
-  "giftSucContent": "You have successfully gifted ${amount} 💰 to ${user}.",
+  "giftSucContent": "You have successfully gifted {amount} 💰 to {user}.",
   "inventoryName1": "Spanish Flag",
   "inventoryName2": "Mate",
   "inventoryName3": "Paella",
@@ -110,4 +110,9 @@
   "level": "Level",
   "experience": "Experience",
   "progressLevel": "Progress to next level:",
+  "errorNotPlayerFound": "No players found in the database",
+  "topTitle": "🏆 Top 10 - {category}",
+  "moneyTitle": "Money 💰",
+  "levelTitle": "Level 🎮",
+  "requestedBy": "Requested by {user}"
 }
