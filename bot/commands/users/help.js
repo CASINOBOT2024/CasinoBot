@@ -58,7 +58,7 @@ module.exports = {
     );
 
     // Define emoji buttons for each category
-    const categoryEmojis = ["💰", "🎮", "⚙️", "👤"]; // Replace with your actual emojis for categories
+    const categoryEmojis = ["⚙️", "💰", "🎮", "👤"]; // Replace with your actual emojis for categories
     const row = new ActionRowBuilder();
 
     categoryEmojis.forEach((emoji, index) => {
