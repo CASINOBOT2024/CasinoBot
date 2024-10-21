@@ -16,7 +16,7 @@ module.exports = {
           { name: '🧉 Mate', value: 'mate' },
           { name: '🥘 Paella', value: 'paella' },
           { name: '🍷 Wine', value: 'wine' },
-          { name: '👒 Sombrero', value: 'sombrero' },
+          { name: '👒 Hat', value: 'sombrero' },
           { name: '⚽ Soccer Ball', value: 'soccerBall' },
           { name: '🐖 Jamón', value: 'jamon' },
           { name: '🎸 Guitarra', value: 'guitarra' },
@@ -26,7 +26,7 @@ module.exports = {
           { name: '🍾 Cava', value: 'cava' },
           { name: '🎶 Castañuelas', value: 'castanuelas' },
           { name: '🏰 Sagrada Familia', value: 'sagradaFamilia' },
-          { name: '☀️ Sol', value: 'sol' },
+          { name: '☀️ Sun', value: 'sol' },
         )
     )
     .addIntegerOption((option) =>
@@ -55,7 +55,7 @@ module.exports = {
     const amount = interaction.options.getInteger("amount") || 1; // Default amount is 1
     const prices = {
       spanishFlag: 10000000,
-      mate": 8000000,
+      mate: 8000000,
       paella": 2000000,
       wine: 2500000,
       flamencoTrumpet: 5000000,
