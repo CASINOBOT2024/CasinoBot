@@ -152,7 +152,7 @@ module.exports = {
       embeds: [{
         title: lang.crashTitleOnPlaying,
         description: lang.crashContentOnPlaying
-                         .replace("{multiplier}",multiplier.toFixed(1))
+                         .replace("{multiplier}",multiplier.toFixed(1)),
         color: 0x00ff00,
       }],
       components: [row],
