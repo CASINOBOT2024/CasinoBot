@@ -199,7 +199,7 @@ module.exports = {
           { name: lang.raceResult, value: raceResult, inline: false },
           {
             name: lang.raceResultContent
-                      .replace("{number}",String(winningHorseIndex + 1).padStart(2,"0"))
+                      .replace("{number}",String(winningHorseIndex + 1).padStart(2,"0")),
             value: "\u200B",
             inline: false,
           },
@@ -213,7 +213,7 @@ module.exports = {
         resultEmbed.fields.push({
           name: lang.congratulations,
           value: lang.youWon
-                     .replace("{won}", winnings.toLocaleString())
+                     .replace("{won}", winnings.toLocaleString()),
           inline: false,
         });
         resultEmbed.fields.push({
@@ -234,7 +234,7 @@ module.exports = {
         resultEmbed.fields.push({
           name: lang.sorry,
           value: lang.youLost
-                     .replace("{amount}", betAmount.toLocaleString())
+                     .replace("{amount}", betAmount.toLocaleString()),
           inline: false,
         });
         resultEmbed.fields.push({
