@@ -121,5 +121,16 @@
   "top10Content": "**#{topNumber}** - {user}: {category}",
   "topLevelContent": "Level {level}",
   "succesfulChangeLanguage": "Language has been successfully changed to {language}.",
-  "sameLang": "The language cannot be the same as what is already established."
+  "sameLang": "The language cannot be the same as what is already established.",
+  "rock": "🪨 Rock",
+  "paper": "📄 Paper",
+  "scissors": "✂️ Scissors",
+  "chooseMove": "Choose your move!",
+  "tie": "It's a tie! 🤝",
+  "win": "You win! 🎉",
+  "lose": "You lose! 😢",
+  "finalContent": "You chose: {userChoice}\nBot chose: {botChoice}\n\n{result}\nYour new balance: {balance} 🪙",
+  "timeEnd": "Time is up! You didn't make a choice."
+  
+  
 }
