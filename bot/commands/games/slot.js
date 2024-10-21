@@ -15,7 +15,6 @@ module.exports = {
         .setRequired(true)
     ),
   category: 'games',
-  usage: "Play the slot machine with a bet!",
   async execute(interaction, client) {
     let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
     if(!guildLang) {
