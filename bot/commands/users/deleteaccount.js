@@ -6,7 +6,6 @@ module.exports = {
     .setName("deleteaccount")
     .setDescription("Permanently delete your account and all associated data"),
   category: "users",
-  usage: "Delete your account after confirmation",
   async execute(interaction, client) {
     let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
     if(!guildLang) {
