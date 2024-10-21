@@ -6,6 +6,7 @@ const {
   EmbedBuilder,
 } = require("discord.js");
 const Player = require("../../../mongoDB/Player");
+const Guild = require("../../../Guild");
 
 const cooldowns = {};
 const CRASH_COOLDOWN = 8000;
@@ -21,6 +22,16 @@ module.exports = {
     ),
   category: 'game',
   async execute(interaction, client) {
+    let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guildLang.save();
+    
     const betAmount = interaction.options.getInteger('bet');
 
     // Fetch player data from the database
@@ -73,8 +84,8 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Error - Max Bet",
-            description: `The max bet is **50.000 🪙**. Please enter a lower bet and try again.`,
+            title: lang.errorMaxBetTitle,
+            description: lang.errorMaxBetContent,
             color: 0xff0000,
           },
         ],
@@ -96,8 +107,9 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Cooldown Active",
-            description: `You need to wait ${remainingTime} seconds before playing roulette again.`,
+            title: lang.cooldownActiveTitle,
+            description: lang.cooldownActiveSecondsContent
+                             .replace("{seconds}", remainingTime)
             color: 0xff0000,
           },
         ],
@@ -109,8 +121,8 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Error",
-            description: "You do not have enough money to place this bet.",
+            title: lang.errorEnoughMoneyTitle,
+            description: lang.errorEnoughMoneyContent,
             color: 0xff0000,
           },
         ],
@@ -131,15 +143,16 @@ module.exports = {
       .addComponents(
         new ButtonBuilder()
           .setCustomId('cashout')
-          .setLabel('Cash Out 🛑')
+          .setLabel(lang.cashOutButton)
           .setStyle(ButtonStyle.Success)
       );
 
     // Send initial embed with multiplier
     await interaction.reply({
       embeds: [{
-        title: 'CRASH 💥',
-        description: `Multiplier:\n**x${multiplier.toFixed(1)}**`,
+        title: lang.crashTitleOnPlaying,
+        description: lang.crashContentOnPlaying
+                         .replace("{multiplier}",multiplier.toFixed(1))
         color: 0x00ff00,
       }],
       components: [row],
@@ -157,8 +170,9 @@ module.exports = {
         // Update the embed with the new multiplier
         interaction.editReply({
           embeds: [{
-            title: 'CRASH 💥',
-            description: `Multiplier:\n**x${multiplier.toFixed(1)}**`,
+            title: lang.crashTitleOnPlaying,
+            description: lang.crashContentOnPlaying
+                         .replace("{multiplier}",multiplier.toFixed(1)),
             color: 0x00ff00,
           }],
           components: [row],
@@ -174,8 +188,11 @@ module.exports = {
       // Player loses their bet amount
       await interaction.followUp({
         embeds: [{
-          title: 'CRASH 💥 - You Lost!',
-          description: `Your bet: **${betAmount} 🪙**\n\nMultiplier:\n**x${multiplier.toFixed(1)}**\n\nCRASHED!\n\nLost: **${betAmount}** 🪙\n\nYour cash: **${playerData.balance.toLocaleString()} 🪙**`,
+          title: lang.crashLoseTitle,
+          description: crash.crashLostContent
+                            .replace("{amount}", betAmount)
+                            .replace("{multiplier}", multiplier.toFixed(1))
+                            .replace("{balance}", playerData.balance.toLocaleString()),
           color: 0xff0000,
         }],
         components: [], // Remove button after crash
@@ -219,8 +236,12 @@ module.exports = {
       // Send winning message
       await buttonInteraction.update({
         embeds: [{
-          title: 'CRASH 💥 - You Cashed Out!',
-          description: `Your bet: **${betAmount} 🪙**\n\nMultiplier:\n**x${multiplier.toFixed(1)}**\n\nYou won: **${Math.trunc(won).toLocaleString()}**\n\nYour cash: **${Math.trunc(playerData.balance).toLocaleString()} 🪙**`,
+          title: lang.crashWinTitle,
+          description: lang.crashWinContent
+                           .replace("{amount}", betAmount)
+                           .replace("{multiplier}", multiplier.toFixed(1))
+                           .replace("{won}", Math.trunc(won).toLocaleString())
+                           .replace("{cash}", Math.trunc(playerData.balance).toLocaleString()),
           color: 0x00ff00,
         }],
         components: [], // Remove button after cash out
