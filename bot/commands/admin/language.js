@@ -33,7 +33,8 @@ module.exports = {
 
     if(guildLang.lang == selectLang) {
       return interaction.reply({
-        content: lang.sameLang
+        content: lang.sameLang,
+        ephemeral: true
       })
     }
 
@@ -45,7 +46,8 @@ module.exports = {
     await interaction.reply({
       content: lang.succesfulChangeLanguage
                    .replace("{language}", selectLang == "es" ? "🇪🇸 Español" : "🇺🇸 English"),
-      color: 0x00ff00,
+      ephemeral: true,
+      color: 0x00ff00
     });
     
   }
