@@ -23,7 +23,6 @@ module.exports = {
         .setRequired(true)
     ),
   category: "economy",
-  usage: "Sell an item to gain coins",
   async execute(interaction, client) {
     const item = interaction.options.getString("item");
     const quantity = interaction.options.getInteger("quantity");
