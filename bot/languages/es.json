@@ -1,4 +1,5 @@
 {
+  "errorCommand": "¡Hubo un error al ejecutar este comando!\nPor favor, repórtalo en https://discord.com/invite/p8CDnWHZJq",
   "onlyCreatorBot": "Sólo el Creador del Bot tiene permiso para realizar este comando.",
   "succesfulAddMoneyTitle": "¡Dinero añadido!",
   "succesfulAddMoneyContent": "{amount} 💰 se ha agregado al saldo de {user}.",
