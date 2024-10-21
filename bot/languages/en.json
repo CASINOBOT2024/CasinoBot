@@ -130,7 +130,6 @@
   "win": "You win! 🎉",
   "lose": "You lose! 😢",
   "finalContent": "You chose: {userChoice}\nBot chose: {botChoice}\n\n{result}\nYour new balance: {balance} 🪙",
-  "timeEnd": "Time is up! You didn't make a choice."
-  
-  
+  "timeEnd": "Time is up! You didn't make a choice.",
+  "profileTitle": "{user}'s Profile"
 }
