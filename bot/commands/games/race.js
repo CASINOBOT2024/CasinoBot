@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const Player = require("../../../mongoDB/Player");
+const Guild = require("../../../mongoDB/Guild");
 
 const horses = [
   { emoji: "🐎" },
@@ -45,6 +46,15 @@ module.exports = {
   category: "game",
   usage: "Bet on a horse to win big!",
   async execute(interaction, client) {
+    let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guildLang.save();
     
     const betAmount = interaction.options.getInteger("bet");
     
@@ -97,8 +107,8 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Error - Max Bet",
-            description: `The max bet is **50.000 🪙**. Please enter a lower bet and try again.`,
+            title: lang.errorMaxBetTitle,
+            description: lang.errorMaxBetContent,
             color: 0xff0000,
           },
         ],
@@ -120,8 +130,9 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Cooldown Active",
-            description: `You need to wait ${remainingTime} seconds before playing roulette again.`,
+            title: lang.cooldownActiveTitle,
+            description: lang.cooldownActiveSecondsContent
+                             .replace("{seconds}", remainingTime),
             color: 0xff0000,
           },
         ],
@@ -135,8 +146,8 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Error",
-            description: "You do not have enough money to place this bet.",
+            title: lang.errorEnoughMoneyTitle,
+            description: lang.errorEnoughMoneyContent,
             color: 0xff0000,
           },
         ],
@@ -146,8 +157,8 @@ module.exports = {
 
     // Informing the user that the race is starting
     const raceEmbed = {
-      title: "🏇 Horse Race - Starting Soon!",
-      description: "The race is about to start! Please wait a moment...",
+      title: lang.horseStartingTitle,
+      description: lang.horseStartingContent,
       color: 0x3498db,
     };
 
@@ -176,20 +187,19 @@ module.exports = {
         .join("\n");
 
       const resultEmbed = {
-        title: `Race - You ${isWin ? "Won!" : "Lost!"}`,
+        title: lang.horseIsWin
+                   .replace("{wonLose}", isWin ? lang.hoseWin : lang.horseLost),
         fields: [
-          { name: "Your bet:", value: `${betAmount.toLocaleString()} 🪙`, inline: false },
+          { name: lang.yourBet, value: `${betAmount.toLocaleString()} 🪙`, inline: false },
           {
-            name: "Your Racer:",
+            name: lang.yourRace,
             value: `${String(chosenHorseIndex + 1).padStart(2, "0")}`,
             inline: false,
           },
-          { name: "Race Result:", value: raceResult, inline: false },
+          { name: lang.raceResult, value: raceResult, inline: false },
           {
-            name: `RACER ${String(winningHorseIndex + 1).padStart(
-              2,
-              "0"
-            )} WON!`,
+            name: lang.raceResultContent
+                      .replace("{number}",String(winningHorseIndex + 1).padStart(2,"0"))
             value: "\u200B",
             inline: false,
           },
@@ -201,12 +211,13 @@ module.exports = {
         const winnings = betAmount * 3; // 3x payout
         playerData.balance += winnings; // Add winnings to balance
         resultEmbed.fields.push({
-          name: "Congratulations!",
-          value: `You won ${winnings.toLocaleString()} 🪙!`,
+          name: lang.congratulations,
+          value: lang.youWon
+                     .replace("{won}", winnings.toLocaleString())
           inline: false,
         });
         resultEmbed.fields.push({
-          name: "Your cash:",
+          name: lang.yourCash,
           value: `${playerData.balance.toLocaleString()} 🪙`,
           inline: false,
         });
@@ -214,19 +225,20 @@ module.exports = {
         // Gain experience for winning
         playerData.experience += EXPERIENCE_GAIN_WIN; // Add experience for winning
         resultEmbed.fields.push({
-          name: "XP Gained:",
+          name: lang.xpGained,
           value: `${EXPERIENCE_GAIN_WIN} XP`,
           inline: false,
         });
       } else {
         playerData.balance -= betAmount; // Lose the bet
         resultEmbed.fields.push({
-          name: "Sorry!",
-          value: `You lost ${betAmount.toLocaleString()} 🪙`,
+          name: lang.sorry,
+          value: lang.youLost
+                     .replace("{amount}", betAmount.toLocaleString())
           inline: false,
         });
         resultEmbed.fields.push({
-          name: "Your cash:",
+          name: lang.yourCash,
           value: `${playerData.balance.toLocaleString()} 🪙`,
           inline: false,
         });
