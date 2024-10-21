@@ -105,5 +105,9 @@
   "inventoryName14": "Sagrada Familia",
   "inventoryName15": "Sun",
   "inventoryTitle": "{user}'s Inventory",
-  "inventoryEmpty": "This inventory is empty."
+  "inventoryEmpty": "This inventory is empty.",
+  "cash": "Cash",
+  "level": "Level",
+  "experience": "Experience",
+  "progressLevel": "Progress to next level:",
 }
