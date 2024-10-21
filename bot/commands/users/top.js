@@ -16,7 +16,6 @@ module.exports = {
         )
     ),
   category: 'users',
-  usage: 'Shows the Top 10 players',
   async execute(interaction, client) {
     let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
     if(!guildLang) {
