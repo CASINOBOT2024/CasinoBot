@@ -61,7 +61,7 @@
   "rouletteWin": "Won!",
   "rouletteLost": "Lost!",
   "rouletteBallLandedTitle": "Ball landed on:",
-  "rouletteBallLandedContent": "{result} (${resultColor})",
+  "rouletteBallLandedContent": "{result} ({resultColor})",
   "rouletteColorRed": "**🟥 RED**",
   "rouletteColorBlack": "**⬛ BLACK**",
   "rouletteColorGreen": "**🟩 GREEN**",
