@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js"); 
 const Player = require("../../../mongoDB/Player");
+const Guild = require"../../../mongoDB/Guild");
 
 const ROULETTE_COOLDOWN = 5000; // 5 seconds cooldown
 
@@ -30,6 +31,16 @@ module.exports = {
   category: "game",
   usage: "Bet on roulette by color",
   async execute(interaction, client) {
+    let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guildLang.save();
+    
     const betAmount = interaction.options.getInteger("bet");
     const prediction = interaction.options.getString("prediction");
     
@@ -81,8 +92,8 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Error - Max Bet",
-            description: `The max bet is **50.000 🪙**. Please enter a lower bet and try again.`,
+            title: lang.errorMaxBetTitle,
+            description: lang.errorMaxBetContent,
             color: 0xff0000,
           },
         ],
@@ -103,8 +114,9 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Cooldown Active",
-            description: `You need to wait ${remainingTime} seconds before playing roulette again.`,
+            title: lang.cooldownActiveTitle,
+            description: lang.cooldownActiveSecondsContent
+                             .replace("{seconds}", remainingTime),
             color: 0xff0000,
           },
         ],
@@ -116,8 +128,8 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Error",
-            description: "You do not have enough money to place this bet.",
+            title: lang.errorEnoughMoneyTitle,
+            description: lang.errorEnoughMoneyContent,
             color: 0xff0000,
           },
         ],
@@ -129,8 +141,8 @@ module.exports = {
     await interaction.reply({
       embeds: [
         {
-          title: "Roulette - Spinning...",
-          description: "The ball is spinning... Please wait!",
+          title: lang.rouletteSpiningTitle,
+          description: lang.rouletteSpiningContent,
           color: 0x3498db,
         },
       ],
@@ -156,19 +168,16 @@ module.exports = {
       // Determine if the player won
       const isWin = prediction === resultColor;
       let messageEmbed = {
-        title: `Roulette - You ${isWin ? "Won!" : "Lost!"}`,
+        title: lang.roulleteIsWin
+                   .replace("{wonLose}", isWin ? lang.rouletteWin : lang.rouletteLost),
         fields: [
-          { name: "Your bet:", value: `${betAmount.toLocaleString()} 💰`, inline: false },
-          { name: "Your Prediction:", value: prediction.toLocaleString(), inline: false },
+          { name: lang.yourBet, value: `${betAmount.toLocaleString()} 💰`, inline: false },
+          { name: lang.yourPrediction, value: prediction.toLocaleString(), inline: false },
           {
-            name: "Ball landed on:",
-            value: `${result} (${
-              resultColor === "red"
-                ? "🟥 red"
-                : resultColor === "green"
-                ? "🟩 green"
-                : "⬛ black"
-            })`,
+            name: lang.rouletteBallLandedTitle,
+            value: lang.rouletteBallLandedContent
+                       .replace("{result}" result)
+                       .replace("{resultColor}", resultColor === "red" ? lang.rouletteColorRed : resultColor === "green" ? lang.rouletteColorGreen : lang.rouletteColorBlack),
             inline: false,
           },
         ],
@@ -183,12 +192,12 @@ module.exports = {
         let winnings = prediction === "green" ? betAmount * 3 : betAmount * 1;
         playerData.balance += winnings; // Add winnings to balance
         messageEmbed.fields.push({
-          name: "You won:",
+          name: lang.rouletteYouWon,
           value: `${winnings.toLocaleString()} 💰`,
           inline: false,
         });
         messageEmbed.fields.push({
-          name: "Your cash:",
+          name: lang.yourCash,
           value: `${playerData.balance.toLocaleString()} 💰`,
           inline: false,
         });
@@ -212,27 +221,27 @@ module.exports = {
         if (winBalloon && !winMobile) {
           playerData.swag.balloons += 1; // Add a balloon
           messageEmbed.fields.push({
-            name: "Congratulations!",
-            value: "You also won a 🎈 balloon!",
+            name: lang.congratulations,
+            value: lang.wonBalloon,
             inline: false,
           });
         } else if (winMobile && !winBalloon) {
           playerData.swag.mobile += 1; // Add a mobile
           messageEmbed.fields.push({
-            name: "Congratulations!",
-            value: "You also won a 📱 mobile!",
+            name: lang.congratulations,
+            value: lang.wonMobile,
             inline: false,
           });
         }
       } else {
         playerData.balance -= betAmount;
         messageEmbed.fields.push({
-          name: "Lost:",
+          name: lang.youLost,
           value: `${betAmount.toLocaleString()} 💰`,
           inline: false,
         });
         messageEmbed.fields.push({
-          name: "Your cash:",
+          name: lang.yourCash,
           value: `${playerData.balance.toLocaleString()} 💰`,
           inline: false,
         });
