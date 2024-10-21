@@ -46,11 +46,26 @@
   "yourBet": "Your bet:",
   "yourRace": "Your Racer:",
   "yourCash": "Your cash:",
+  "youLost": "Lost:",
+  "yourPrediction": "Your Prediction:",
   "raceResult": "Race Result:",
   "raceResultContent": "Racer {number} WON!",
   "congratulations": "Congratulations!",
   "youWon": "You won {won} 🪙!",
   "youLost": "You lost {amount} 🪙",
   "xpGained": "XP Gained:",
-  "sorry": "Sorry!"
+  "sorry": "Sorry!",
+  "rouletteSpiningTitle": "Roulette - Spinning...",
+  "rouletteSpiningContent": "The ball is spinning... Please wait!"
+  "roulleteIsWin": "Roulette - You {wonLose}",
+  "rouletteWin": "Won!",
+  "rouletteLost": "Lost!",
+  "rouletteBallLandedTitle": "Ball landed on:",
+  "rouletteBallLandedContent": "{result} (${resultColor})",
+  "rouletteColorRed": "**🟥 RED**",
+  "rouletteColorBlack": "**⬛ BLACK**",
+  "rouletteColorGreen": "**🟩 GREEN**",
+  "rouletteYouWon": "You Won!",
+  "wonBalloon": "You also won a 🎈 balloon!",
+  "wonMobile": "You also won a 📱 mobile!"
 }
