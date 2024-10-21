@@ -64,31 +64,6 @@ module.exports = {
       });
       await playerData.save();
     }
-/*
-    if(playerData.balance <= 10000000 && betAmount > 30000) {
-      return interaction.reply({
-        embeds: [
-          {
-            title: "Error - Max Bet",
-            description: `The max bet is **30.000 🪙**. Please enter a lower bet and try again.`,
-            color: 0xff0000,
-          },
-        ],
-        ephemeral: true,
-      });
-    } else if(playerData.balance > 10000000 && betAmount > 50000) {
-      return interaction.reply({
-        embeds: [
-          {
-            title: "Error - Max Bet",
-            description: `The max bet is **50.000 🪙**. Please enter a lower bet and try again.`,
-            color: 0xff0000,
-          },
-        ],
-        ephemeral: true,
-      });
-    }
-*/
 
     if(betAmount > 50000) {
       return interaction.reply({
