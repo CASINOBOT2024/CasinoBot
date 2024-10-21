@@ -116,6 +116,6 @@
   "levelTitle": "Level 🎮",
   "requestedBy": "Requested by {user}",
   "unknownTopPlayer": "Unknown Player",
-  "top10Content": "**#{topNumber}** - {user} {category}",
+  "top10Content": "**#{topNumber}** - {user}: {category}",
   "topLevelContent": "Level {level}"
 }
