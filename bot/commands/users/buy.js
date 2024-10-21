@@ -75,7 +75,7 @@ module.exports = {
     let player = await Player.findOne({ userId: interaction.user.id });
     if (!player) {
       return interaction.reply({
-        content: "You don't have an account yet! Please create one first.",
+        content: lang.userNotHaveAccount,
         ephemeral: true,
       });
     }
