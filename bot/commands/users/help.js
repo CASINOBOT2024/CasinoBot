@@ -7,7 +7,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("help")
     .setDescription("Show available commands"),  // El nombre y descripción del comando principal también se moverían a JSON si quieres
-  category: "utils",
+  category: "users",
   async execute(interaction, client) {
     // Obtener el idioma configurado para el servidor
     let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
