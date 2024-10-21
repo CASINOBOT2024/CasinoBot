@@ -123,14 +123,14 @@ module.exports = {
 
     // Save the updated player data
     await player.save();
-    let item2 =  item.replace(/([A-Z])/g, ' $1')
+    
     return interaction.reply({
       embeds: [
         {
           title: lang.purchaseSucTitle,
           description: lang.purchaseSucContent
                            .replace("{amount}", amount)
-                           .replace("{item}", item2)
+                           .replace("{item}", item)
                            .replace("{totalCost}", totalCost.toLocaleString()),
           color: 0x00ff00,
         },
