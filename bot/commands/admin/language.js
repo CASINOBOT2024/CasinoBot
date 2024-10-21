@@ -17,7 +17,6 @@ module.exports = {
     )
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
   category: "admin",
-  usage: "Change the language of the bot",
   async execute(interaction, client) {
 
   const selectLang = interaction.options.getString("lang");
