@@ -19,7 +19,6 @@ module.exports = {
         .setDescription('Amount to bet')
         .setRequired(true)
     ),
-  usage: "Play Rock Paper Scissors with a bet!",
   category: 'games',
   async execute(interaction, client) {
     
