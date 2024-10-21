@@ -106,7 +106,12 @@ module.exports = {
 
     // Send the initial message with options
     await interaction.reply({
-      content: lang.chooseMove,
+      embeds: [
+        {
+          description: lang.chooseMove,
+          color: 0x00ff00,
+        },
+      ],
       ephemeral: true,
       components: [row],
     });
@@ -142,11 +147,16 @@ module.exports = {
       await playerData.save(); // Update player balance in the database
 
       await buttonInteraction.update({
-        content: lang.finalContent
+        embeds: [
+        {
+          description: lang.finalContent
                      .replace("{userChoice}", userChoice)
                      .replace("{botChoice}", botChoice)
                      .replace("{result}", result)
                      .replace("{balance}", playerData.balance),
+          color: 0x00ff00,
+        },
+      ],
         ephemeral: true,
         components: [], // Disable buttons after interaction
       });
