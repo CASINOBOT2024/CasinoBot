@@ -26,7 +26,7 @@
   "errorMobileSellTitle": "Error",
   "errorMobileSellContent": "No tienes suficientes móviles. Sólo tienes {mobile}.",
   "succesfulSellTitle": "¡Venta exitosa!",
-  "succesfulSellContent": "Vendiste {quantity} {item}{plural} por {amount} 💰.",
+  "succesfulSellContent": "Vendiste {quantity} {item} por {amount} 💰.",
   "succesfulSellFiledTitle": "Nuevo Saldo",
   "balloonTitle": "Globos",
   "mobileTitle": "Móviles",
