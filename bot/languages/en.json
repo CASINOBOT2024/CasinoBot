@@ -178,17 +178,33 @@
       "name": "slot",
       "description": "Play the slot machine with a bet!"
     }
-    "roulette": {
-      "name": "roulette",
-      "description": "Play roulette by guessing the color"
+    "buy": {
+      "name": "buy",
+      "description": "Buy items from the store"
     }
-    "roulette": {
-      "name": "roulette",
-      "description": "Play roulette by guessing the color"
+    "deleteaccount": {
+      "name": "deleteaccount",
+      "description": "Permanently delete your account and all associated data"
     }
-    "roulette": {
-      "name": "roulette",
-      "description": "Play roulette by guessing the color"
+    "gift": {
+      "name": "gift",
+      "description": "Gift money to another user"
+    }
+    "help": {
+      "name": "help",
+      "description": "Show available commands"
+    }
+    "inventory": {
+      "name": "inventory",
+      "description": "View your inventory or another user's inventory"
+    }
+    "profile": {
+      "name": "profile",
+      "description": "Check a user's profile, including balance and stats"
+    }
+    "top": {
+      "name": "top",
+      "description": "Show the Top 10 players with the most money or highest level"
     }
   },
   "categories": {
@@ -199,7 +215,7 @@
   },
   "help_welcome": {
     "title": "Welcome to the Help Section!",
-    "description": "Here you can find all available commands. Choose a category below to explore."
+    "description": "Here you can find all available commands. Choose a category below to explore.\n\n⚙️ = ADMIN\n💰 = ECONOMY\n🎮 = GAMES\n👤 = USERS"
   }
 
 }
