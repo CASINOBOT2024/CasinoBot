@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const Player = require("../../../mongoDB/Player");
+const Guild = require("../../../mongoDB/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -13,6 +14,18 @@ module.exports = {
   category: "users",
   usage: "Check a user's profile information",
   async execute(interaction, client) {
+    let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guildLang.save();
+
+    const lang = require(`../../languages/${guildLang.lang}.json`);
+    
     // Get the user to check, or default to the command executor
     const userToCheck = interaction.options.getUser("user") || interaction.user;
 
@@ -47,20 +60,20 @@ module.exports = {
     const profileEmbed = {
       title: `${userToCheck.username}'s Profile`,
       fields: [
-        { name: "Cash", value: `${player.balance.toLocaleString()} 💰`, inline: false },
-        { name: "Level", value: `${player.level.toLocaleString()}`, inline: false },
+        { name: lang.cash, value: `${player.balance.toLocaleString()} 💰`, inline: false },
+        { name: lang.level, value: `${player.level.toLocaleString()}`, inline: false },
         {
-          name: "Experience",
+          name: lang.experience,
           value: `${player.experience.toLocaleString()} / ${xpNeeded.toLocaleString()} XP`,
           inline: false,
         },
-        { name: "Progress to next level:", value: progressBar, inline: false },
+        { name: lang.progressLevel, value: progressBar, inline: false },
         {
-          name: "Balloons",
+          name: lang.balloonTitle,
           value: `${player.swag.balloons.toLocaleString()} 🎈`,
           inline: false,
         },
-        { name: "Mobiles", value: `${player.swag.mobile.toLocaleString()} 📱`, inline: false },
+        { name: lang.mobileTitle, value: `${player.swag.mobile.toLocaleString()} 📱`, inline: false },
         
       ],
       color: 0x3498db,
