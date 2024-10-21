@@ -7,7 +7,6 @@ module.exports = {
     .setName("daily")
     .setDescription("Collect your daily reward of 10,000 coins"),
   category: "economy",
-  usage: "Collect your daily coins",
   async execute(interaction, client) {
     const rewardAmount = 10000;
 
