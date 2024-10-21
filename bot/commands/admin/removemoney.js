@@ -96,7 +96,7 @@ module.exports = {
       embeds: [
         {
           title: lang.moneyRemovedTitle,
-          description: lang.moneyRemovedTitle
+          description: lang.succesfulRemoveMoney
                            .replace("{amount}", amount.toLocaleString())
                            .replace("{user}", targetUser.username),
           color: 0x00ff00,
