@@ -73,6 +73,6 @@ module.exports = {
     };
 
     // Send the embed
-    return interaction.reply({ embeds: [topEmbed] });
+    await interaction.reply({ embeds: [topEmbed] });
   }
 };
