@@ -176,7 +176,7 @@ module.exports = {
           {
             name: lang.rouletteBallLandedTitle,
             value: lang.rouletteBallLandedContent
-                       .replace("{result}" result)
+                       .replace("{result}", result)
                        .replace("{resultColor}", resultColor === "red" ? lang.rouletteColorRed : resultColor === "green" ? lang.rouletteColorGreen : lang.rouletteColorBlack),
             inline: false,
           },
