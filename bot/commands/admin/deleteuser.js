@@ -56,7 +56,7 @@ module.exports = {
     await Player.deleteOne({ userId: targetUser.id });
 
     // Confirm the deletion
-    return interaction.reply({
+    await interaction.reply({
       embeds: [{
         title: lang.succesfulDeletedUserTitle,
         description: lang.succesfulDeletedUserContent
