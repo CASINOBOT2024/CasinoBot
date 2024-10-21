@@ -27,7 +27,7 @@
   "succesfulSellFiledTitle": "New Balance",
   "balloonTitle": "Balloons",
   "mobileTitle": "Mobiles",
-  "errorMaxBetTitle: "Error - Max Bet",
+  "errorMaxBetTitle": "Error - Max Bet",
   "errorMaxBetContent": "The max bet is **50.000 🪙**. Please enter a lower bet and try again.",
   "errorEnoughMoneyTitle": "Error",
   "errorEnoughMoneyContent": "You do not have enough money to place this bet.",
