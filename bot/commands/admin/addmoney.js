@@ -71,7 +71,7 @@ module.exports = {
     await player.save();
 
     // Send a confirmation message
-    return interaction.reply({
+    await interaction.reply({
       embeds: [
         {
           title: lang.succesfulAddMoneyTitle,
