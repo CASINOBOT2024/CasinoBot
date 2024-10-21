@@ -19,7 +19,6 @@ module.exports = {
         .setRequired(true)
     ),
   category: "users",
-  usage: "Gift money to another user",
   async execute(interaction) {
     let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
     if(!guildLang) {
