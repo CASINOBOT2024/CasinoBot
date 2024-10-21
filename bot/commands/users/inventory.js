@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const Player = require("../../../mongoDB/Player");
+const Guild = require("../../../mongoDB/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -11,6 +12,18 @@ module.exports = {
   category: "users",
   usage: "View your or another user's inventory",
   async execute(interaction, client) {
+    let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guildLang.save();
+
+    const lang = require(`../../languages/${guildLang.lang}.json`);
+    
     const user = interaction.options.getUser("user") || interaction.user;
     const player = await Player.findOne({ userId: user.id });
 
@@ -22,21 +35,21 @@ module.exports = {
     }
 
     const inventoryItems = [
-      { name: 'Spanish Flag', count: player.swag.spanishFlag, emoji: '🇪🇸' },
-      { name: 'Mate', count: player.swag.mate, emoji: '🧉' },
-      { name: 'Paella', count: player.swag.paella, emoji: '🥘' },
-      { name: 'Wine', count: player.swag.wine, emoji: '🍷' },
-      { name: 'Sombrero', count: player.swag.sombrero, emoji: '👒' },
-      { name: 'Soccer Ball', count: player.swag.soccerBall, emoji: '⚽' },
-      { name: 'Jamón', count: player.swag.jamon, emoji: '🐖' },
-      { name: 'Guitarra', count: player.swag.guitarra, emoji: '🎸' },
-      { name: 'Torero', count: player.swag.torero, emoji: '🐂' },
-      { name: 'Flamenco', count: player.swag.flamenco, emoji: '💃' },
-      { name: 'Siesta', count: player.swag.siesta, emoji: '💤' },
-      { name: 'Cava', count: player.swag.cava, emoji: '🍾' },
-      { name: 'Castañuelas', count: player.swag.castanuelas, emoji: '🎶' },
-      { name: 'Sagrada Familia', count: player.swag.sagradaFamilia, emoji: '🏰' },
-      { name: 'Sol', count: player.swag.sol, emoji: '☀️' },
+      { name: lang.inventoryName1, count: player.swag.spanishFlag, emoji: '🇪🇸' },
+      { name: lang.inventoryName2, count: player.swag.mate, emoji: '🧉' },
+      { name: lang.inventoryName3, count: player.swag.paella, emoji: '🥘' },
+      { name: lang.inventoryName4, count: player.swag.wine, emoji: '🍷' },
+      { name: lang.inventoryName5, count: player.swag.sombrero, emoji: '👒' },
+      { name: lang.inventoryName6, count: player.swag.soccerBall, emoji: '⚽' },
+      { name: lang.inventoryName7, count: player.swag.jamon, emoji: '🐖' },
+      { name: lang.inventoryName8, count: player.swag.guitarra, emoji: '🎸' },
+      { name: lang.inventoryName9, count: player.swag.torero, emoji: '🐂' },
+      { name: lang.inventoryName10, count: player.swag.flamenco, emoji: '💃' },
+      { name: lang.inventoryName11, count: player.swag.siesta, emoji: '💤' },
+      { name: lang.inventoryName12, count: player.swag.cava, emoji: '🍾' },
+      { name: lang.inventoryName13, count: player.swag.castanuelas, emoji: '🎶' },
+      { name: lang.inventoryName14, count: player.swag.sagradaFamilia, emoji: '🏰' },
+      { name: lang.inventoryName15, count: player.swag.sol, emoji: '☀️' },
     ];
 
     const inventoryList = inventoryItems
@@ -45,8 +58,9 @@ module.exports = {
       .join("\n");
 
     const embed = {
-      title: `${user.username}'s Inventory`,
-      description: inventoryList || "This inventory is empty.",
+      title: lang.inventoryTitle
+                 .replace("{user}", user.username),
+      description: inventoryList || lang.inventoryEmpty,
       color: 0x00ff00,
     };
 
