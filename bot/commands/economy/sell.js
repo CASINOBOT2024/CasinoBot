@@ -95,7 +95,7 @@ module.exports = {
     player.balance += amountGained; // Add the gained amount to the player's balance
     await player.save(); // Save the updated player data
 
-    return interaction.reply({
+    await interaction.reply({
       embeds: [
         {
           title: lang.succesfulSellTitle,
