@@ -62,7 +62,8 @@ module.exports = {
     // Create an embed to display the top
     const topEmbed = {
       title: lang.topTitle
-                 .replace("{category}", category === 'balance' ? lang.moneyTitle : lang.levelTitle),
+                 .replace("{category}", category === 'balance' ? lang.moneyTitle : lang.levelTitle
+                                                                                       .replace("{level}", player.level)),
       description: topMessage,
       color: 0x00ff00,
       footer: {
