@@ -29,7 +29,7 @@ module.exports = {
         lang: "en",
       });
     }
-  const lang = require(`../../languages/${guildLang.lang}.json`);
+  let lang = require(`../../languages/${guildLang.lang}.json`);
 
     if(guildLang.lang == item) {
       return interaction.reply({
@@ -40,6 +40,8 @@ module.exports = {
     guildLang.lang = selectLang;
 
     await guildLang.save();
+    
+    lang = require(`../../languages/${guildLang.lang}.json`);
     return interaction.reply({
       content: lang.succesfulChangeLanguage
                    .replace("{language}", selectLang == "es" ? "🇪🇸 Español" : "🇺🇸 English"),
