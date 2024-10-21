@@ -79,7 +79,7 @@
   "errorNotEnoughMoneyToBuyTitle": "Error",
   "errorNotEnoughMoneyToBuyContent": "You do not have enough money to buy this item.",
   "purchaseSucTitle": "Purchase Successful!",
-  "puchaseSucContent": "You bought {amount} {item} for {totalCost} 💰.",
+  "purchaseSucContent": "You bought {amount} {item} for {totalCost} 💰.",
   "deleteAccountStep1": "Are you sure you want to delete your account? Please type **confirm** to proceed.",
   "deleteAccountStep2": "You have confirmed. Please type **confirm** again to permanently delete your account.",
   "deletedAccountSuc": "Your account has been successfully deleted. All data is permanently removed.",
