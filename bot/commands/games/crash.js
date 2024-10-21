@@ -6,7 +6,7 @@ const {
   EmbedBuilder,
 } = require("discord.js");
 const Player = require("../../../mongoDB/Player");
-const Guild = require("../../../Guild");
+const Guild = require("../../../mongoDB/Guild");
 
 const cooldowns = {};
 const CRASH_COOLDOWN = 8000;
