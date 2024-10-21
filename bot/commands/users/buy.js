@@ -124,7 +124,7 @@ module.exports = {
     // Save the updated player data
     await player.save();
     
-    return interaction.reply({
+    await interaction.reply({
       embeds: [
         {
           title: lang.purchaseSucTitle,
