@@ -77,7 +77,7 @@ module.exports = {
         {
           title: lang.dailyRewardTitle,
           description: lang.dailyRewardContent
-                           .replace("{amuont}", rewardAmount.toLocaleString()),
+                           .replace("{amount}", rewardAmount.toLocaleString()),
           color: 0x00ff00,
         },
       ],
