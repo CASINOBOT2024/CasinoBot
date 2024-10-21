@@ -75,7 +75,7 @@ module.exports = {
     let player = await Player.findOne({ userId: interaction.user.id });
     if (!player) {
       return interaction.reply({
-        content: lang.userNotHaveAccount,
+        content: lang.userNotHaveAccountDaily,
         ephemeral: true,
       });
     }
