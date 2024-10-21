@@ -29,7 +29,7 @@ module.exports = {
 
     if (!player) {
       return interaction.reply({
-        content: "This user doesn't have an account.",
+        content: lang.userNotHaveAccount,
         ephemeral: true,
       });
     }
