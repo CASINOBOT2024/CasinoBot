@@ -31,7 +31,7 @@ module.exports = {
     }
   let lang = require(`../../languages/${guildLang.lang}.json`);
 
-    if(guildLang.lang == item) {
+    if(guildLang.lang == selectLang) {
       return interaction.reply({
         content: lang.sameLang
       })
