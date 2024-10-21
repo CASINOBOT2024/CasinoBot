@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const Player = require("../../../mongoDB/Player");
+const Guild = require("../../../mongoDB/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
