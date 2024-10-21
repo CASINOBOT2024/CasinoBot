@@ -101,8 +101,7 @@ module.exports = {
           title: lang.succesfulSellTitle,
           description: lang.succesfulSellContent
                            .replace("{quantity}",quantity)
-                           .replace("{item}", item === "balloon" ? "balloon" : "mobile")
-                           .replace("{plural}", quantity > 1 ? "s" : "")
+                           .replace("{item}", item === "balloon" ? lang.balloonTitle : lang.mobileTitle)
                            .replace("{amount", amountGained.toLocaleString()),
           fields: [
             {
