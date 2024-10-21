@@ -131,5 +131,6 @@
   "win": "¡Has ganado! 🎉",
   "lose": "¡Has perdido! 😢",
   "finalContent": "Tu movimiento: {userChoice}\nMovimiento de IA: {botChoice}\n\n{result}\nYTu nuevo saldo: {balance} 🪙",
-  "timeEnd": "¡Se acabó el tiempo! No hiciste ningún movimiento."
+  "timeEnd": "¡Se acabó el tiempo! No hiciste ningún movimiento.",
+  "profileTitle": "Perfil de {user}"
 }
