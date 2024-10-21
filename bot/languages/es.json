@@ -118,6 +118,6 @@
   "unknownTopPlayer": "Jugador desconocido",
   "top10Content": "**#{topNumber}** - {user}: {category}",
   "topLevelContent": "Nivel {level}",
-  "succesfulChangeLanguage": "El idioma se ha cambiado correctamente a {language}",
-  "sameLang": "El idioma no puede ser el mismo que está ya establecido"
+  "succesfulChangeLanguage": "El idioma se ha cambiado correctamente a {language}.",
+  "sameLang": "El idioma no puede ser el mismo que está ya establecido."
 }
