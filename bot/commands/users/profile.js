@@ -87,6 +87,6 @@ module.exports = {
     };
 
     // Send the embed message
-    return interaction.reply({ embeds: [profileEmbed] });
+    await interaction.reply({ embeds: [profileEmbed] });
   },
 };
