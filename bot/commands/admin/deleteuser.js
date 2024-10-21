@@ -5,14 +5,13 @@ const Guild = require("../../../mongoDB/Guild");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('deleteuser')
-    .setDescription('Delete a user from the database')
+    .setDescription('Delete a user from the database (creator bot only)')
     .addUserOption(option => 
       option.setName('target')
         .setDescription('Select the user to delete from the database')
         .setRequired(true)
     ),
   category: 'admin',
-  usage: 'Delete a user from the database (creator bot only)',
   async execute(interaction, client) {
 
     let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
