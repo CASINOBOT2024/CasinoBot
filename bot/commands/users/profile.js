@@ -12,7 +12,6 @@ module.exports = {
         .setDescription("The user whose profile you want to check")
     ),
   category: "users",
-  usage: "Check a user's profile information",
   async execute(interaction, client) {
     let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
     if(!guildLang) {
