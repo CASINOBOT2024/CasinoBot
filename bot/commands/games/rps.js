@@ -6,6 +6,7 @@ const {
   EmbedBuilder,
 } = require("discord.js");
 const Player = require("../../../mongoDB/Player");
+const Guild = require("../../../mongoDB/Guild");
 
 const cooldowns = {};
 
@@ -20,6 +21,19 @@ module.exports = {
     ),
   category: 'games',
   async execute(interaction, client) {
+    
+    let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guildLang.save();
+    
+    const lang = require(`../../languages/${guildLang.lang}.json`);
+    
     const betAmount = interaction.options.getInteger('bet');
 
     // Fetch player data from the database
@@ -55,8 +69,9 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Cooldown Active",
-            description: `You need to wait ${remainingTime} seconds before playing roulette again.`,
+            title: lang.cooldownActiveTitle,
+            description: lang.cooldownActiveSecondsContent
+                             .replace("{seconds}", remainingTime),
             color: 0xff0000,
           },
         ],
@@ -68,8 +83,8 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Error",
-            description: "You do not have enough money to place this bet.",
+            title: lang.errorEnoughMoneyTitle,
+            description: lang.errorEnoughMoneyContent,
             color: 0xff0000,
           },
         ],
@@ -84,14 +99,14 @@ module.exports = {
     // Create buttons for Rock, Paper, Scissors
     const row = new ActionRowBuilder()
       .addComponents(
-        new ButtonBuilder().setCustomId('rock').setLabel('🪨 Rock').setStyle(ButtonStyle.Primary),
-        new ButtonBuilder().setCustomId('paper').setLabel('📄 Paper').setStyle(ButtonStyle.Primary),
-        new ButtonBuilder().setCustomId('scissors').setLabel('✂️ Scissors').setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId('rock').setLabel(lang.rock).setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId('paper').setLabel(lang.paper).setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId('scissors').setLabel(lang.scissors).setStyle(ButtonStyle.Primary),
       );
 
     // Send the initial message with options
     await interaction.reply({
-      content: 'Choose your move!',
+      content: lang.chooseMove,
       components: [row],
     });
 
@@ -110,23 +125,27 @@ module.exports = {
 
       let result;
       if (userChoice === botChoice) {
-        result = 'It\'s a tie! 🤝';
+        result = lang.tie;
         playerData.balance += betAmount; // Refund bet
       } else if (
         (userChoice === 'rock' && botChoice === 'scissors') ||
         (userChoice === 'paper' && botChoice === 'rock') ||
         (userChoice === 'scissors' && botChoice === 'paper')
       ) {
-        result = 'You win! 🎉';
+        result = lang.win;
         playerData.balance += betAmount * 2; // Double the bet
       } else {
-        result = 'You lose! 😢';
+        result = lang.lose;
       }
 
       await playerData.save(); // Update player balance in the database
 
       await buttonInteraction.update({
-        content: `You chose: ${userChoice}\nBot chose: ${botChoice}\n\n${result}\nYour new balance: ${playerData.balance} 🪙`,
+        content: lang.finalContent
+                     .replace("{userChoice}", userChoice)
+                     .replace("{botChoice}", botChoice)
+                     .replace("{result}", result)
+                     .replace("{balance}", playerData.balance),
         components: [], // Disable buttons after interaction
       });
 
@@ -136,7 +155,7 @@ module.exports = {
     collector.on('end', async (collected) => {
       if (collected.size === 0) {
         await message.edit({
-          content: 'Time is up! You didn\'t make a choice.',
+          content: lang.timeEnd,
           components: [],
         });
       }
