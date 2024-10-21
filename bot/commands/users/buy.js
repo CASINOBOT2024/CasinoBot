@@ -36,7 +36,6 @@ module.exports = {
         .setRequired(false) // Make this option not required
     ),
   category: "users",
-  usage: "Buy items from the store",
   async execute(interaction, client) {
 
     let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
