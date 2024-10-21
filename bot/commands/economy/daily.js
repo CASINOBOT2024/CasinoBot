@@ -20,6 +20,8 @@ module.exports = {
     }
     
     await guildLang.save();
+
+    const lang = require(`../../languages/${guildLang.lang}.json`);
     
     let player = await Player.findOne({ userId: interaction.user.id });
     if (!player) {
