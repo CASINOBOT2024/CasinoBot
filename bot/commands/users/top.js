@@ -67,7 +67,7 @@ module.exports = {
       color: 0x00ff00,
       footer: {
         text: lang.requestedBy
-                  .replace("{user}", user.username),
+                  .replace("{user}", interaction.user.username),
         icon_url: interaction.user.displayAvatarURL(),
       },
     };
