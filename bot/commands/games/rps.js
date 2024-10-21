@@ -79,6 +79,19 @@ module.exports = {
       });
     }
 
+    if(betAmount > 50000) {
+      return interaction.reply({
+        embeds: [
+          {
+            title: lang.errorMaxBetTitle,
+            description: lang.errorMaxBetContent,
+            color: 0xff0000,
+          },
+        ],
+        ephemeral: true,
+      });
+    }
+
     if (betAmount > playerData.balance) {
       return interaction.reply({
         embeds: [
