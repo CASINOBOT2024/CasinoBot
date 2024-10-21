@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const Player = require("../../../mongoDB/Player");
+const Guild = require("../../../mongoDB/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -37,12 +38,25 @@ module.exports = {
   category: "users",
   usage: "Buy items from the store",
   async execute(interaction, client) {
+
+    let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guildLang.save();
+
+    const lang = require(`../../languages/${guildLang.lang}.json`);
+        
     const item = interaction.options.getString("item");
     const amount = interaction.options.getInteger("amount") || 1; // Default amount is 1
     const prices = {
       spanishFlag: 10000000,
-      mate: 8000000,
-      paella: 2000000,
+      mate": 8000000,
+      paella": 2000000,
       wine: 2500000,
       flamencoTrumpet: 5000000,
       sombrero: 5500000,
@@ -69,7 +83,7 @@ module.exports = {
     // Show the list of items if no item is specified
     if (!item) {
       const embed = {
-        title: 'Store Items',
+        title: lang.buyItemTitle,
         fields: Object.entries(prices).map(([key, price]) => ({
           name: `**${key.replace(/([A-Z])/g, ' $1').toUpperCase()}:**`,
           value: `${price.toLocaleString()} 💰`,
@@ -83,7 +97,7 @@ module.exports = {
     // Check if the selected item is in the price list
     if (!prices[item]) {
       return interaction.reply({
-        content: "Invalid item selected.",
+        content: lang.invalidItemSelect,
         ephemeral: true,
       });
     }
@@ -94,8 +108,8 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Error",
-            description: "You do not have enough money to buy this item.",
+            title: lang.errorNotEnoughMoneyToBuyTitle,
+            description: lang.errorNotEnoughMoneyToBuyContent,
             color: 0xff0000,
           },
         ],
@@ -113,8 +127,11 @@ module.exports = {
     return interaction.reply({
       embeds: [
         {
-          title: "Purchase Successful!",
-          description: `You bought ${amount} ${item.replace(/([A-Z])/g, ' $1')} for ${totalCost.toLocaleString()} 💰.`,
+          title: lang.purchaseSucTitle,
+          description: lang.purchaseSucContent
+                           .replace("{amount}", amount)
+                           .replace("{item}", item.replace(/([A-Z])/g, ' $1'))
+                           .replace("{totalCost}", totalCost.toLocaleString()),
           color: 0x00ff00,
         },
       ],
