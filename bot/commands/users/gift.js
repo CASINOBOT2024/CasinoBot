@@ -94,7 +94,7 @@ module.exports = {
     await recipientData.save();
 
     // Respond to the interaction
-    return interaction.reply({
+    await interaction.reply({
       embeds: [
         {
           title: lang.giftSucTitle,
