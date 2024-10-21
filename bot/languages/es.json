@@ -1,4 +1,5 @@
 {
+  "userNotHaveAccount": "¡Todavía no tienes una cuenta! Por favor, primero obtén un saldo.",
   "errorCommand": "¡Hubo un error al ejecutar este comando!\nPor favor, repórtalo en https://discord.com/invite/p8CDnWHZJq",
   "onlyCreatorBot": "Sólo el Creador del Bot tiene permiso para realizar este comando.",
   "succesfulAddMoneyTitle": "¡Dinero añadido!",
