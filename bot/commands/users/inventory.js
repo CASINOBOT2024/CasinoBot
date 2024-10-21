@@ -10,7 +10,6 @@ module.exports = {
       option.setName("user").setDescription("The user whose inventory to view")
     ),
   category: "users",
-  usage: "View your or another user's inventory",
   async execute(interaction, client) {
     let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
     if(!guildLang) {
