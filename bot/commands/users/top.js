@@ -53,9 +53,10 @@ module.exports = {
     // Build the top 10 message
     let topMessage = topPlayers.map((player, index) => {
       const user = client.users.cache.get(player.userId);
-      return `**#${index + 1}** - ${user ? `${user.username} (${user.id})` : 'Unknown Player'}: ${
-        category === 'balance' ? `**${player.balance.toLocaleString()}** 💰` : `Level ${player.level}`
-      }`;
+      return lang.top10Content
+                 .replace("{topNumber}", index + 1)
+                 .replace("{user}", user ? `${user.username} (${user.id})` : lang.unknownTopPlayer)
+                 .replace("{category}", category === 'balance' ? `**${player.balance.toLocaleString()}** 💰` : lang.topLevelContent)
     }).join('\n\n');
 
     // Create an embed to display the top
