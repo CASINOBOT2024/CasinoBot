@@ -238,7 +238,7 @@ module.exports = {
       } else {
         playerData.balance -= betAmount;
         messageEmbed.fields.push({
-          name: lang.youLost,
+          name: lang.youLostOnly,
           value: `${betAmount.toLocaleString()} 💰`,
           inline: false,
         });
