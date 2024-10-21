@@ -6,7 +6,7 @@ const Guild = require("../../../mongoDB/Guild");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("addmoney")
-    .setDescription("Add money to a user")
+    .setDescription("Add money to a user (creator bot only)")
     .addUserOption((option) =>
       option
         .setName("user")
@@ -20,7 +20,6 @@ module.exports = {
         .setRequired(true)
     ),
   category: "admin",
-  usage: "Add money to a user (creator bot only)",
   async execute(interaction, client) {
 
     let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
