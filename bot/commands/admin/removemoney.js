@@ -92,7 +92,7 @@ module.exports = {
     await targetPlayer.save(); // Save the updated user data
 
     // Confirm the removal
-    return interaction.reply({
+    await interaction.reply({
       embeds: [
         {
           title: lang.moneyRemovedTitle,
