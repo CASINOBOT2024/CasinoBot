@@ -15,7 +15,7 @@ module.exports = {
           { name: '🇺🇸 English', value: 'en' },
         )
     )
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
   category: "admin",
   usage: "Change the language of the bot",
   async execute(interaction, client) {
