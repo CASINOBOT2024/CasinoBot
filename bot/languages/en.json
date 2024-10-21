@@ -1,4 +1,5 @@
 {
+  "noCommands": "No commands available.",
   "userNotHaveAccount": "You don't have an account yet! Please create one first.",
   "errorCommand": "There was an error executing this command!\nPlease, report it on https://discord.com/invite/p8CDnWHZJq",
   "onlyCreatorBot": "Only the Bot Creator has permission to do this command",
@@ -131,5 +132,74 @@
   "lose": "You lose! 😢",
   "finalContent": "You chose: {userChoice}\nBot chose: {botChoice}\n\n{result}\nYour new balance: {balance} 🪙",
   "timeEnd": "Time is up! You didn't make a choice.",
-  "profileTitle": "{user}'s Profile"
+  "profileTitle": "{user}'s Profile",
+  "commands": {
+    "deleteuser": {
+      "name": "deleteuser",
+      "description": "Delete a user from the database (creator bot only)"
+    }
+    "addmoney": {
+      "name": "addmoney",
+      "description": "Add money to a user (creator bot only)"
+    }
+    "language": {
+      "name": "language",
+      "description": "Change the language of the bot"
+    }
+    "removemoney": {
+      "name": "removemoney",
+      "description": "Remove money from a user's balance (creator bot only)"
+    }
+    "daily": {
+      "name": "daily",
+      "description": "Collect your daily reward of 10,000 coins"
+    }
+    "sell": {
+      "name": "sell",
+      "description": "Sell your balloons and mobiles for coins"
+    }
+    "crash": {
+      "name": "crash",
+      "description": "Play Crash with a bet!"
+    }
+    "race": {
+      "name": "race",
+      "description": "Bet on a horse to win big!"
+    }
+    "roulette": {
+      "name": "roulette",
+      "description": "Play roulette by guessing the color"
+    }
+    "rps": {
+      "name": "rps",
+      "description": "Play Rock Paper Scissors with a bet!"
+    }
+    "slot": {
+      "name": "slot",
+      "description": "Play the slot machine with a bet!"
+    }
+    "roulette": {
+      "name": "roulette",
+      "description": "Play roulette by guessing the color"
+    }
+    "roulette": {
+      "name": "roulette",
+      "description": "Play roulette by guessing the color"
+    }
+    "roulette": {
+      "name": "roulette",
+      "description": "Play roulette by guessing the color"
+    }
+  },
+  "categories": {
+    "users": "Users",
+    "admin": "Admin",
+    "games": "Games",
+    "economy": "Economy"
+  },
+  "help_welcome": {
+    "title": "Welcome to the Help Section!",
+    "description": "Here you can find all available commands. Choose a category below to explore."
+  }
+
 }
