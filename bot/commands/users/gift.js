@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const Player = require("../../../mongoDB/Player");
+const Guild = require("../../../mongoDB/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -20,6 +21,18 @@ module.exports = {
   category: "users",
   usage: "Gift money to another user",
   async execute(interaction) {
+    let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guildLang.save();
+
+    const lang = require(`../../languages/${guildLang.lang}.json`);
+    
     const recipient = interaction.options.getUser("recipient");
     const amount = interaction.options.getInteger("amount");
     const senderId = interaction.user.id;
@@ -27,16 +40,20 @@ module.exports = {
     // Fetch sender's data
     let sender = await Player.findOne({ userId: senderId });
     if (!sender) {
-      return interaction.reply({
-        embeds: [
-          {
-            title: "Error",
-            description: "You do not have an account. Please create one first.",
-            color: 0xff0000,
-          },
-        ],
-        ephemeral: true,
+      sender = new Player({
+        userId: senderId,
+        balance: 0,
+        level: 1,
+        experience: 0,
+        maxBet: 0,
+        swag: {
+          balloons: 0,
+          mobile: 0,
+        },
+        lastDaily: 0,
+        lastSlot: 0,
       });
+      await sender.save();
     }
 
     // Fetch recipient's data
@@ -45,8 +62,8 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Error",
-            description: "The recipient does not have an account.",
+            title: lang.giftAccountNotExistTitle,
+            description: lang.giftAccountNotExistContent,
             color: 0xff0000,
           },
         ],
@@ -59,8 +76,8 @@ module.exports = {
       return interaction.reply({
         embeds: [
           {
-            title: "Error",
-            description: "You do not have enough money to gift this amount.",
+            title: lang.giftSenderNotHaveMoneyTitle,
+            description: lang.giftSenderNotHaveMoneyContent,
             color: 0xff0000,
           },
         ],
@@ -80,8 +97,10 @@ module.exports = {
     return interaction.reply({
       embeds: [
         {
-          title: "Gift Successful",
-          description: `You have successfully gifted ${amount.toLocaleString()} 💰 to ${recipient.username}.`,
+          title: lang.giftSucTitle,
+          description: lang.giftSucContent
+                           .replace("{amount}", amount.toLocaleString())
+                           .replace("{user}", recipient.username),
           color: 0x00ff00,
         },
       ],
