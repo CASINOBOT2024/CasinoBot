@@ -56,14 +56,13 @@ module.exports = {
       return lang.top10Content
                  .replace("{topNumber}", index + 1)
                  .replace("{user}", user ? `${user.username} (${user.id})` : lang.unknownTopPlayer)
-                 .replace("{category}", category === 'balance' ? `**${player.balance.toLocaleString()}** 💰` : lang.topLevelContent)
+                 .replace("{category}", category === 'balance' ? `**${player.balance.toLocaleString()}** 💰` : lang.topLevelContent.replace("{level}", player.level))
     }).join('\n\n');
 
     // Create an embed to display the top
     const topEmbed = {
       title: lang.topTitle
-                 .replace("{category}", category === 'balance' ? lang.moneyTitle : lang.levelTitle
-                                                                                       .replace("{level}", player.level)),
+                 .replace("{category}", category === 'balance' ? lang.moneyTitle : lang.levelTitle),
       description: topMessage,
       color: 0x00ff00,
       footer: {
