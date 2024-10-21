@@ -24,7 +24,7 @@ const EXPERIENCE_GAIN_WIN = 100; // Experience gained for winning
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("race")
-    .setDescription("Bet on a horse in a race")
+    .setDescription("Bet on a horse to win big!")
     .addStringOption((option) =>
       option
         .setName("horse")
@@ -44,7 +44,6 @@ module.exports = {
         .setRequired(true)
     ),
   category: "game",
-  usage: "Bet on a horse to win big!",
   async execute(interaction, client) {
     let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
     if(!guildLang) {
