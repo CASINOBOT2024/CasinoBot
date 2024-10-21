@@ -56,7 +56,7 @@ module.exports = {
     const prices = {
       spanishFlag: 10000000,
       mate: 8000000,
-      paella": 2000000,
+      paella: 2000000,
       wine: 2500000,
       flamencoTrumpet: 5000000,
       sombrero: 5500000,
