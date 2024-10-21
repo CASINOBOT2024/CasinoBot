@@ -37,7 +37,7 @@ module.exports = {
       })
     }
 
-    await guildLang.lang = selectLang;
+    guildLang.lang = selectLang;
 
     await guildLang.save();
     return interaction.reply({
