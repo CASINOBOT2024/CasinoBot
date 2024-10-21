@@ -55,6 +55,8 @@ module.exports = {
     }
     
     await guildLang.save();
+
+    const lang = require(`../../languages/${guildLang.lang}.json`);
     
     const betAmount = interaction.options.getInteger("bet");
     
