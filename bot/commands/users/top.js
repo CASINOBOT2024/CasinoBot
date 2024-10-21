@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Player = require("../../../mongoDB/Player");
+const Guild = require("../../../mongoDB/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -17,6 +18,18 @@ module.exports = {
   category: 'users',
   usage: 'Shows the Top 10 players',
   async execute(interaction, client) {
+    let guildLang = await Guild.findOne({ guildId: interaction.guild.id });
+    if(!guildLang) {
+      guildLang = new Guild ({
+        guildId: interaction.guild.id,
+        lang: "en",
+      });
+    }
+    
+    await guildLang.save();
+
+    const lang = require(`../../languages/${guildLang.lang}.json`);
+    
     const category = interaction.options.getString('category');
 
     // Find the top 10 players based on the selected category (money or level)
@@ -30,7 +43,7 @@ module.exports = {
     if (!topPlayers || topPlayers.length === 0) {
       return interaction.reply({
         embeds: [{
-          title: 'No players found in the database',
+          title: lang.errorNotPlayerFound,
           color: 0xff0000,
         }],
         ephemeral: true,
@@ -47,11 +60,13 @@ module.exports = {
 
     // Create an embed to display the top
     const topEmbed = {
-      title: `🏆 Top 10 - ${category === 'balance' ? 'Money 💰' : 'Level 🎮'}`,
+      title: lang.topTitle
+                 .replace("{category}", category === 'balance' ? lang.moneyTitle : lang.levelTitle),
       description: topMessage,
       color: 0x00ff00,
       footer: {
-        text: `Requested by ${interaction.user.username}`,
+        text: lang.requestedBy
+                  .replace("{user}", user.username),
         icon_url: interaction.user.displayAvatarURL(),
       },
     };
